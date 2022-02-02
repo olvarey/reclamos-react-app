@@ -1,20 +1,36 @@
 import "./App.css";
-import Home from "./components/Home";
-import Header from "./components/Header";
 
+//Components
+import Header from "./components/Header";
+import NavBar from "./components/NavBar";
+import AseguradosForm from "./components/AseguradosForm";
+import ConsultaForm from "./components/ConsultaForm";
+
+//React Router
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+//PrimeReact
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
   return (
-    <div className="p-d-inline-flex">
-      <Header></Header>
-      <div style={{ width: "450px", margin: "auto" }}>
-        <Home></Home>
+    <Router>
+      <div className="p-d-inline-flex">
+        <Header></Header>
+        <div style={{ width: "450px", margin: "auto" }}>
+          <NavBar></NavBar>
+          <Routes>
+            <Route exact path="/" element={<AseguradosForm />} />
+            <Route path="/consulta" element={<ConsultaForm />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
