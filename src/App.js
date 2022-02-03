@@ -3,6 +3,7 @@ import "./App.css";
 //Components
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 import AseguradosForm from "./components/AseguradosForm";
 import ConsultaForm from "./components/ConsultaForm";
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/consulta" element={<ConsultaForm />} />
           </Routes>
         </div>
+        <Footer></Footer>
       </div>
     </Router>
   );

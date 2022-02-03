@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import { InputText } from "primereact/inputtext";
-import { InputMask } from "primereact/inputmask";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import { Card } from "primereact/card";
 import { classNames } from "primereact/utils";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -16,23 +16,13 @@ const ConsultaForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      nombreCompleto: "",
-      dui: "",
-      codigoAsegurado: "",
+      numeroSolicitud: "",
     },
     validate: (data) => {
       let errors = {};
 
-      if (!data.nombreCompleto) {
-        errors.nombreCompleto = "Nombre completo es requerido.";
-      }
-
-      if (!data.dui) {
-        errors.dui = "DUI es requerido.";
-      }
-
-      if (!data.codigoAsegurado) {
-        errors.codigoAsegurado = "Código de asegurado es requerido.";
+      if (!data.numeroSolicitud) {
+        errors.numeroSolicitud = "El número de solicitud es requerido.";
       }
 
       return errors;
@@ -42,9 +32,7 @@ const ConsultaForm = () => {
       axios
         .get("http://localhost:8181/maestro", {
           params: {
-            nombre: data.nombreCompleto.trim().toUpperCase(),
-            dui: data.dui,
-            codigo: data.codigoAsegurado,
+            nombre: data.numeroSolicitud.trim().toUpperCase(),
           },
         })
         .then((res) => {
@@ -111,87 +99,42 @@ const ConsultaForm = () => {
 
   return (
     <React.Fragment>
-      <div className="p-fluid">
-        <form onSubmit={formik.handleSubmit} className="p-fluid">
-          <div className="p-field">
-            <label
-              htmlFor="nombreCompleto"
-              className={classNames({
-                "p-error": isFormFieldValid("nombreCompleto"),
-              })}
-            >
-              Nombre completo del asegurado:
-            </label>
-            <span className="p-input-icon-right">
-              <i className="pi pi-user" />
-              <InputText
-                id="nombreCompleto"
-                name="nombreCompleto"
-                type="text"
-                value={formik.values.nombreCompleto}
-                onChange={formik.handleChange}
+      <Card
+        title="Información de la solicitud"
+        style={{ width: "25rem", marginBottom: "2em", marginTop: "10px" }}
+      >
+        <div className="p-fluid">
+          <form onSubmit={formik.handleSubmit} className="p-fluid">
+            <div className="p-field">
+              <label
+                htmlFor="numeroSolicitud"
                 className={classNames({
-                  "p-invalid": isFormFieldValid("nombreCompleto"),
+                  "p-error": isFormFieldValid("numeroSolicitud"),
                 })}
-              />
-            </span>
-            {getFormErrorMessage("nombreCompleto")}
-          </div>
-          <div className="p-field" style={{ marginTop: "10px" }}>
-            <label
-              htmlFor="dui"
-              className={classNames({
-                "p-error": isFormFieldValid("dui"),
-              })}
-            >
-              Documento Único de Identidad (DUI):
-            </label>
-            <span className="p-input-icon-right">
-              <i className="pi pi-id-card" />
-              <InputMask
-                id="dui"
-                name="dui"
-                mask="999999999"
-                value={formik.values.dui}
-                onChange={formik.handleChange}
-                placeholder="999999999"
-                className={classNames({
-                  "p-invalid": isFormFieldValid("dui"),
-                })}
-              ></InputMask>
-            </span>
-            {getFormErrorMessage("dui")}
-          </div>
-          <div className="p-field" style={{ marginTop: "10px" }}>
-            <label
-              htmlFor="codigoAsegurado"
-              className={classNames({
-                "p-error": isFormFieldValid("codigoAsegurado"),
-              })}
-            >
-              Código asegurado:
-            </label>
-            <span className="p-input-icon-right">
-              <i className="pi pi-credit-card" />
-              <InputText
-                id="codigoAsegurado"
-                name="codigoAsegurado"
-                value={formik.values.codigoAsegurado}
-                onChange={formik.handleChange}
-                placeholder="99999999"
-                className={classNames({
-                  "p-invalid": isFormFieldValid("codigoAsegurado"),
-                })}
-                keyfilter="pint"
-              ></InputText>
-            </span>
-            {getFormErrorMessage("codigoAsegurado")}
-          </div>
-          <div className="p-field" style={{ marginTop: "10px" }}>
-            <Button label="Buscar" icon="pi pi-check" type="submit" />
-          </div>
-        </form>
-      </div>
+              >
+                Número de solicitud:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-folder" />
+                <InputText
+                  id="numeroSolicitud"
+                  name="numeroSolicitud"
+                  type="text"
+                  value={formik.values.numeroSolicitud}
+                  onChange={formik.handleChange}
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("numeroSolicitud"),
+                  })}
+                />
+              </span>
+              {getFormErrorMessage("numeroSolicitud")}
+            </div>
+            <div className="p-field" style={{ marginTop: "10px" }}>
+              <Button label="Consultar" icon="pi pi-check" type="submit" />
+            </div>
+          </form>
+        </div>
+      </Card>
 
       <Dialog
         header="Detalle de búsqueda"
