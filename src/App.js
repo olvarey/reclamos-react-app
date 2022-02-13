@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import AseguradosForm from "./components/AseguradosForm";
 import ConsultaForm from "./components/ConsultaForm";
+import ReclamoForm from "./components/ReclamoForm";
 
 //React Router
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -28,6 +29,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<AseguradosForm />} />
             <Route path="/consulta" element={<ConsultaForm />} />
+            <Route path="/reclamo" element={<ReclamoForm />} />
           </Routes>
         </div>
         <Footer></Footer>
