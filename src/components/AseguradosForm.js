@@ -95,16 +95,10 @@ const AseguradosForm = () => {
     return (
       <div>
         <Button
-          label="SI"
+          label="Cerrar"
           icon="pi pi-check"
           onClick={() => setShowDlgNotFound(false)}
           autoFocus
-        />
-        <Button
-          label="NO"
-          icon="pi pi-times"
-          onClick={() => setShowDlgNotFound(false)}
-          className="p-button-text"
         />
       </div>
     );
@@ -114,7 +108,7 @@ const AseguradosForm = () => {
     <React.Fragment>
       <Card
         title="Información del asegurado"
-        style={{ width: "25rem", marginBottom: "2em", marginTop: "10px" }}
+        style={{ width: "30rem", marginBottom: "2em", marginTop: "10px" }}
       >
         <div className="p-fluid">
           <form onSubmit={formik.handleSubmit} className="p-fluid">

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { InputMask } from "primereact/inputmask";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
@@ -15,12 +18,27 @@ const ReclamoForm = () => {
   const [showDlgNotFound, setShowDlgNotFound] = useState(false);
   const [reclamo, setReclamo] = useState({});
 
+  const solicitantes = [
+    { id: 1, name: "Beneficiario" },
+    { id: 2, name: "Heredero" },
+    { id: 3, name: "Apoderado Legal" },
+    { id: 4, name: "Tutor" },
+  ];
+
+  const seguros = [
+    { id: 1, name: "Seguro de Vida Básico" },
+    { id: 2, name: "Seguro de Vida Opcional" },
+    { id: 3, name: "Seguro de Vida Dotal" },
+    { id: 4, name: "Seguro por Sepelio" },
+    { id: 5, name: "Seguro por Gasto Funerarios" },
+  ];
+
   const formik = useFormik({
     initialValues: {
       //SOLICITANTE
       nombreCompletoSolicitante: "",
       duiSolicitante: "",
-      fechaExpDuiSolicitante: "",
+      fechaExpDuiSolicitante: null,
       nitSolicitante: "",
       tipoSolicitante: "",
       direccionSolicitante: "",
@@ -31,7 +49,7 @@ const ReclamoForm = () => {
       //REPRESENTADO
       nombreCompletoRepresentado: "",
       duiRepresentado: "",
-      fechaExpDuiRepresentado: "",
+      fechaExpDuiRepresentado: null,
       nitRepresentado: "",
       direccionRepresentado: "",
       telefonoRepresentado: "",
@@ -82,6 +100,16 @@ const ReclamoForm = () => {
           "Correo electrónico del solicitante es requerido.";
       }
 
+      if (!data.emailSolicitante) {
+        errors.emailSolicitante =
+          "Correo electrónico del solicitante es requerido.";
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.emailSolicitante)
+      ) {
+        errors.emailSolicitante =
+          "Dirección de correo incorrecta. Ejem. nombre@email.com";
+      }
+
       //REPRESENTADO
       if (!data.nombreCompletoRepresentado) {
         errors.nombreCompletoRepresentado =
@@ -117,6 +145,11 @@ const ReclamoForm = () => {
       if (!data.emailRepresentado) {
         errors.emailRepresentado =
           "Correo electrónico del representado es requerido.";
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.emailSolicitante)
+      ) {
+        errors.emailRepresentado =
+          "Dirección de correo incorrecta. Ejem. nombre@email.com";
       }
 
       if (!data.tipoSeguro) {
@@ -201,10 +234,35 @@ const ReclamoForm = () => {
     <React.Fragment>
       <Card
         title="Información del reclamo"
-        style={{ width: "auto", marginBottom: "2em", marginTop: "10px" }}
+        style={{ width: "30rem", marginBottom: "2em", marginTop: "10px" }}
       >
         <div className="p-fluid">
           <form onSubmit={formik.handleSubmit} className="p-fluid">
+            <div className="p-field" style={{ marginTop: "10px" }}>
+              <label
+                htmlFor="tipoSeguro"
+                className={classNames({
+                  "p-error": isFormFieldValid("tipoSeguro"),
+                })}
+              >
+                Tipo de seguro:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-credit-card" />
+                <Dropdown
+                  id="tipoSeguro"
+                  name="tipoSeguro"
+                  value={formik.values.tipoSeguro}
+                  onChange={formik.handleChange}
+                  options={seguros}
+                  optionLabel="name"
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("tipoSeguro"),
+                  })}
+                />
+              </span>
+              {getFormErrorMessage("tipoSeguro")}
+            </div>
             <div className="p-field">
               <label
                 htmlFor="nombreCompletoSolicitante"
@@ -264,18 +322,19 @@ const ReclamoForm = () => {
                 Fecha expiración DUI del solicitante:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-calendar" />
+                <Calendar
                   id="fechaExpDuiSolicitante"
                   name="fechaExpDuiSolicitante"
                   value={formik.values.fechaExpDuiSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  dateFormat="dd/mm/yy"
+                  mask="99/99/9999"
+                  showIcon
                   className={classNames({
                     "p-invalid": isFormFieldValid("fechaExpDuiSolicitante"),
                   })}
-                  keyfilter="pint"
-                ></InputText>
+                />
               </span>
               {getFormErrorMessage("fechaExpDuiSolicitante")}
             </div>
@@ -290,17 +349,18 @@ const ReclamoForm = () => {
               </label>
               <span className="p-input-icon-right">
                 <i className="pi pi-credit-card" />
-                <InputText
+                <InputMask
                   id="nitSolicitante"
                   name="nitSolicitante"
                   value={formik.values.nitSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  mask="9999-999999-999-9"
+                  placeholder="9999-999999-999-9"
                   className={classNames({
                     "p-invalid": isFormFieldValid("nitSolicitante"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputMask>
               </span>
               {getFormErrorMessage("nitSolicitante")}
             </div>
@@ -315,17 +375,17 @@ const ReclamoForm = () => {
               </label>
               <span className="p-input-icon-right">
                 <i className="pi pi-credit-card" />
-                <InputText
+                <Dropdown
                   id="tipoSolicitante"
                   name="tipoSolicitante"
                   value={formik.values.tipoSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  options={solicitantes}
+                  optionLabel="name"
                   className={classNames({
                     "p-invalid": isFormFieldValid("tipoSolicitante"),
                   })}
-                  keyfilter="pint"
-                ></InputText>
+                />
               </span>
               {getFormErrorMessage("tipoSolicitante")}
             </div>
@@ -339,18 +399,17 @@ const ReclamoForm = () => {
                 Dirección de solicitante:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-book" />
+                <InputTextarea
                   id="direccionSolicitante"
                   name="direccionSolicitante"
                   value={formik.values.direccionSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("direccionSolicitante"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputTextarea>
               </span>
               {getFormErrorMessage("direccionSolicitante")}
             </div>
@@ -364,18 +423,19 @@ const ReclamoForm = () => {
                 Teléfono de solicitante:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-phone" />
+                <InputMask
                   id="telefonoSolicitante"
                   name="telefonoSolicitante"
                   value={formik.values.telefonoSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  mask="9999-9999"
+                  placeholder="9999-9999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("telefonoSolicitante"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputMask>
               </span>
               {getFormErrorMessage("telefonoSolicitante")}
             </div>
@@ -389,18 +449,19 @@ const ReclamoForm = () => {
                 Celular de solicitante:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-phone" />
+                <InputMask
                   id="celularSolicitante"
                   name="celularSolicitante"
                   value={formik.values.celularSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  mask="9999-9999"
+                  placeholder="9999-9999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("celularSolicitante"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputMask>
               </span>
               {getFormErrorMessage("celularSolicitante")}
             </div>
@@ -414,17 +475,15 @@ const ReclamoForm = () => {
                 Correo electrónico de solicitante:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
+                <i className="pi pi-at" />
                 <InputText
                   id="emailSolicitante"
                   name="emailSolicitante"
                   value={formik.values.emailSolicitante}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("emailSolicitante"),
                   })}
-                  keyfilter="pint"
                 ></InputText>
               </span>
               {getFormErrorMessage("emailSolicitante")}
@@ -439,18 +498,17 @@ const ReclamoForm = () => {
                 Observación:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-pencil" />
+                <InputTextarea
                   id="observacion"
                   name="observacion"
                   value={formik.values.observacion}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("observacion"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputTextarea>
               </span>
               {getFormErrorMessage("observacion")}
             </div>
@@ -514,17 +572,18 @@ const ReclamoForm = () => {
               </label>
               <span className="p-input-icon-right">
                 <i className="pi pi-credit-card" />
-                <InputText
+                <Calendar
                   id="fechaExpDuiRepresentado"
                   name="fechaExpDuiRepresentado"
                   value={formik.values.fechaExpDuiRepresentado}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  dateFormat="dd/mm/yy"
+                  mask="99/99/9999"
+                  showIcon
                   className={classNames({
                     "p-invalid": isFormFieldValid("fechaExpDuiRepresentado"),
                   })}
-                  keyfilter="pint"
-                ></InputText>
+                />
               </span>
               {getFormErrorMessage("fechaExpDuiRepresentado")}
             </div>
@@ -539,17 +598,18 @@ const ReclamoForm = () => {
               </label>
               <span className="p-input-icon-right">
                 <i className="pi pi-credit-card" />
-                <InputText
+                <InputMask
                   id="nitRepresentado"
                   name="nitRepresentado"
                   value={formik.values.nitRepresentado}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  mask="9999-999999-999-9"
+                  placeholder="9999-999999-999-9"
                   className={classNames({
                     "p-invalid": isFormFieldValid("nitRepresentado"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputMask>
               </span>
               {getFormErrorMessage("nitRepresentado")}
             </div>
@@ -563,18 +623,17 @@ const ReclamoForm = () => {
                 Dirección de representado:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-book" />
+                <InputTextarea
                   id="direccionRepresentado"
                   name="direccionRepresentado"
                   value={formik.values.direccionRepresentado}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("direccionRepresentado"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputTextarea>
               </span>
               {getFormErrorMessage("direccionRepresentado")}
             </div>
@@ -588,18 +647,19 @@ const ReclamoForm = () => {
                 Teléfono de representado:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-phone" />
+                <InputMask
                   id="telefonoRepresentado"
                   name="telefonoRepresentado"
                   value={formik.values.telefonoRepresentado}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  mask="9999-9999"
+                  placeholder="9999-9999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("telefonoRepresentado"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputMask>
               </span>
               {getFormErrorMessage("telefonoRepresentado")}
             </div>
@@ -613,18 +673,19 @@ const ReclamoForm = () => {
                 Celular de representado:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
+                <i className="pi pi-phone" />
+                <InputMask
                   id="celularRepresentado"
                   name="celularRepresentado"
                   value={formik.values.celularRepresentado}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
+                  mask="9999-9999"
+                  placeholder="9999-9999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("celularRepresentado"),
                   })}
                   keyfilter="pint"
-                ></InputText>
+                ></InputMask>
               </span>
               {getFormErrorMessage("celularRepresentado")}
             </div>
@@ -638,48 +699,21 @@ const ReclamoForm = () => {
                 Correo electrónico de representado:
               </label>
               <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
+                <i className="pi pi-at" />
                 <InputText
                   id="emailRepresentado"
                   name="emailRepresentado"
                   value={formik.values.emailRepresentado}
                   onChange={formik.handleChange}
-                  placeholder="99999999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("emailRepresentado"),
                   })}
-                  keyfilter="pint"
                 ></InputText>
               </span>
               {getFormErrorMessage("emailRepresentado")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="tipoSeguro"
-                className={classNames({
-                  "p-error": isFormFieldValid("tipoSeguro"),
-                })}
-              >
-                Tipo de seguro:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputText
-                  id="tipoSeguro"
-                  name="tipoSeguro"
-                  value={formik.values.tipoSeguro}
-                  onChange={formik.handleChange}
-                  placeholder="99999999"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("tipoSeguro"),
-                  })}
-                  keyfilter="pint"
-                ></InputText>
-              </span>
-              {getFormErrorMessage("tipoSeguro")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <Button label="Buscar" icon="pi pi-check" type="submit" />
+              <Button label="Enviar" icon="pi pi-check" type="submit" />
             </div>
           </form>
         </div>

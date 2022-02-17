@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -82,16 +83,12 @@ const ConsultaForm = () => {
     return (
       <div>
         <Button
-          label="SI"
+          label="Cerrar"
           icon="pi pi-check"
-          onClick={() => setShowDlgNotFound(false)}
+          onClick={() => {
+            setShowDlgNotFound(false);
+          }}
           autoFocus
-        />
-        <Button
-          label="NO"
-          icon="pi pi-times"
-          onClick={() => setShowDlgNotFound(false)}
-          className="p-button-text"
         />
       </div>
     );
@@ -101,7 +98,7 @@ const ConsultaForm = () => {
     <React.Fragment>
       <Card
         title="Información de la solicitud"
-        style={{ width: "25rem", marginBottom: "2em", marginTop: "10px" }}
+        style={{ width: "30rem", marginBottom: "2em", marginTop: "10px" }}
       >
         <div className="p-fluid">
           <form onSubmit={formik.handleSubmit} className="p-fluid">
