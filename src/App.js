@@ -9,7 +9,7 @@ import ConsultaForm from "./components/ConsultaForm";
 import ReclamoForm from "./components/ReclamoForm";
 
 //React Router
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { MemoryRouter as Router, Route, Routes } from "react-router-dom";
 
 //PrimeReact
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -21,7 +21,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
-    <Router>
+    <Router initialEntries={["/"]}>
       <div className="p-d-inline-flex">
         <Header></Header>
         <div style={{ width: "450px", margin: "auto" }}>
