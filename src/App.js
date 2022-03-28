@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import AseguradosForm from "./components/AseguradosForm";
 import ConsultaForm from "./components/ConsultaForm";
 import ReclamoForm from "./components/ReclamoForm";
+import TipoSolicitanteDropDown from "./components/dropdowns/TipoSolicitanteDropDown";
 
 //React Router
 import { MemoryRouter as Router, Route, Routes } from "react-router-dom";
@@ -26,6 +27,7 @@ function App() {
         <Header></Header>
         <div style={{ width: "450px", margin: "auto" }}>
           <NavBar></NavBar>
+          <TipoSolicitanteDropDown />
           <Routes>
             <Route exact path="/" element={<AseguradosForm />} />
             <Route path="/consulta" element={<ConsultaForm />} />
