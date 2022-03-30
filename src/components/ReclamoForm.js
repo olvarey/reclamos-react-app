@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -18,20 +18,37 @@ const ReclamoForm = () => {
   const [showDlgNotFound, setShowDlgNotFound] = useState(false);
   const [reclamo, setReclamo] = useState({});
 
-  const solicitantes = [
-    { id: 1, name: "Beneficiario" },
-    { id: 2, name: "Heredero" },
-    { id: 3, name: "Apoderado Legal" },
-    { id: 4, name: "Tutor" },
-  ];
+  const [tiposSolicitante, setTiposSolicitantes] = useState([]);
+  const [tiposSeguro, setTiposSeguro] = useState([]);
 
-  const seguros = [
-    { id: 1, name: "Seguro de Vida Básico" },
-    { id: 2, name: "Seguro de Vida Opcional" },
-    { id: 3, name: "Seguro de Vida Dotal" },
-    { id: 4, name: "Seguro por Sepelio" },
-    { id: 5, name: "Seguro por Gasto Funerarios" },
-  ];
+  const fetchTiposSolicitante = () => {
+    axios
+      .get("http://localhost:8181/api-asegurados/v1/tipos-solicitante")
+      .then((res) => {
+        if (res.data) {
+          setTiposSolicitantes(res.data);
+        } else {
+        }
+      })
+      .catch((err) => {});
+  };
+
+  const fetchTiposSeguro = () => {
+    axios
+      .get("http://localhost:8181/api-asegurados/v1/tipos-seguro")
+      .then((res) => {
+        if (res.data) {
+          setTiposSeguro(res.data);
+        } else {
+        }
+      })
+      .catch((err) => {});
+  };
+
+  useEffect(() => {
+    fetchTiposSolicitante();
+    fetchTiposSeguro();
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -254,8 +271,10 @@ const ReclamoForm = () => {
                   name="tipoSeguro"
                   value={formik.values.tipoSeguro}
                   onChange={formik.handleChange}
-                  options={seguros}
-                  optionLabel="name"
+                  options={tiposSeguro}
+                  optionLabel="nombreSeguro"
+                  optionValue="codigoSeguro"
+                  placeholder="Selecccione una opción"
                   className={classNames({
                     "p-invalid": isFormFieldValid("tipoSeguro"),
                   })}
@@ -380,8 +399,10 @@ const ReclamoForm = () => {
                   name="tipoSolicitante"
                   value={formik.values.tipoSolicitante}
                   onChange={formik.handleChange}
-                  options={solicitantes}
-                  optionLabel="name"
+                  options={tiposSolicitante}
+                  optionLabel="descripcion"
+                  optionValue="noCalidad"
+                  placeholder="Selecccione una opción"
                   className={classNames({
                     "p-invalid": isFormFieldValid("tipoSolicitante"),
                   })}

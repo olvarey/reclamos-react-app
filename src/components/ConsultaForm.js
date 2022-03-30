@@ -5,6 +5,8 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
+import { InputMask } from "primereact/inputmask";
+import { Calendar } from "primereact/calendar";
 import { classNames } from "primereact/utils";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -18,12 +20,23 @@ const ConsultaForm = () => {
   const formik = useFormik({
     initialValues: {
       numeroSolicitud: "",
+      duiSolicitante: "",
+      fechaExpDuiSolicitante: null,
     },
     validate: (data) => {
       let errors = {};
 
       if (!data.numeroSolicitud) {
         errors.numeroSolicitud = "El número de solicitud es requerido.";
+      }
+
+      if (!data.duiSolicitante) {
+        errors.duiSolicitante = "DUI del solicitante es requerido.";
+      }
+
+      if (!data.fechaExpDuiSolicitante) {
+        errors.fechaExpDuiSolicitante =
+          "Fecha expiración DUI del solicitante es requerido.";
       }
 
       return errors;
@@ -125,6 +138,57 @@ const ConsultaForm = () => {
                 />
               </span>
               {getFormErrorMessage("numeroSolicitud")}
+            </div>
+            <div className="p-field" style={{ marginTop: "10px" }}>
+              <label
+                htmlFor="duiSolicitante"
+                className={classNames({
+                  "p-error": isFormFieldValid("duiSolicitante"),
+                })}
+              >
+                DUI del solicitante:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-id-card" />
+                <InputMask
+                  id="duiSolicitante"
+                  name="duiSolicitante"
+                  mask="999999999"
+                  value={formik.values.duiSolicitante}
+                  onChange={formik.handleChange}
+                  placeholder="999999999"
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("duiSolicitante"),
+                  })}
+                ></InputMask>
+              </span>
+              {getFormErrorMessage("duiSolicitante")}
+            </div>
+            <div className="p-field" style={{ marginTop: "10px" }}>
+              <label
+                htmlFor="fechaExpDuiSolicitante"
+                className={classNames({
+                  "p-error": isFormFieldValid("fechaExpDuiSolicitante"),
+                })}
+              >
+                Fecha expiración DUI del solicitante:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-calendar" />
+                <Calendar
+                  id="fechaExpDuiSolicitante"
+                  name="fechaExpDuiSolicitante"
+                  value={formik.values.fechaExpDuiSolicitante}
+                  onChange={formik.handleChange}
+                  dateFormat="dd/mm/yy"
+                  mask="99/99/9999"
+                  showIcon
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("fechaExpDuiSolicitante"),
+                  })}
+                />
+              </span>
+              {getFormErrorMessage("fechaExpDuiSolicitante")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <Button label="Consultar" icon="pi pi-check" type="submit" />
