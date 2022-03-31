@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -7,6 +6,8 @@ import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
 import { InputMask } from "primereact/inputmask";
 import { Calendar } from "primereact/calendar";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 import { classNames } from "primereact/utils";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -15,27 +16,27 @@ const ConsultaForm = () => {
   const [formData, setFormData] = useState({});
   const [showDlgFound, setShowDlgFound] = useState(false);
   const [showDlgNotFound, setShowDlgNotFound] = useState(false);
-  const [asegurado, setAsegurado] = useState({});
+  const [solicitudes, setSolicitudes] = useState({});
 
   const formik = useFormik({
     initialValues: {
-      numeroSolicitud: "",
+      noSolicitud: "",
       duiSolicitante: "",
-      fechaExpDuiSolicitante: null,
+      fechaExpiracionDUI: null,
     },
     validate: (data) => {
       let errors = {};
 
-      if (!data.numeroSolicitud) {
-        errors.numeroSolicitud = "El número de solicitud es requerido.";
+      if (!data.noSolicitud) {
+        errors.noSolicitud = "El número de solicitud es requerido.";
       }
 
       if (!data.duiSolicitante) {
         errors.duiSolicitante = "DUI del solicitante es requerido.";
       }
 
-      if (!data.fechaExpDuiSolicitante) {
-        errors.fechaExpDuiSolicitante =
+      if (!data.fechaExpiracionDUI) {
+        errors.fechaExpiracionDUI =
           "Fecha expiración DUI del solicitante es requerido.";
       }
 
@@ -44,14 +45,16 @@ const ConsultaForm = () => {
     onSubmit: (data) => {
       setFormData(data);
       axios
-        .get("http://localhost:8181/maestro", {
+        .get("http://localhost:8181/api-asegurados/v1/solicitud", {
           params: {
-            nombre: data.numeroSolicitud.trim().toUpperCase(),
+            noSolicitud: data.noSolicitud,
+            duiSolicitante: data.duiSolicitante,
+            fechaExpiracionDUI: data.fechaExpiracionDUI,
           },
         })
         .then((res) => {
           if (res.data) {
-            setAsegurado(res.data);
+            setSolicitudes(res.data);
             setShowDlgFound(true);
           } else {
             setShowDlgNotFound(true);
@@ -77,16 +80,10 @@ const ConsultaForm = () => {
     return (
       <div>
         <Button
-          label="SI"
+          label="Aceptar"
           icon="pi pi-check"
           onClick={() => setShowDlgFound(false)}
           autoFocus
-        />
-        <Button
-          label="NO"
-          icon="pi pi-times"
-          onClick={() => setShowDlgFound(false)}
-          className="p-button-text"
         />
       </div>
     );
@@ -117,9 +114,9 @@ const ConsultaForm = () => {
           <form onSubmit={formik.handleSubmit} className="p-fluid">
             <div className="p-field">
               <label
-                htmlFor="numeroSolicitud"
+                htmlFor="noSolicitud"
                 className={classNames({
-                  "p-error": isFormFieldValid("numeroSolicitud"),
+                  "p-error": isFormFieldValid("noSolicitud"),
                 })}
               >
                 Número de solicitud:
@@ -127,17 +124,17 @@ const ConsultaForm = () => {
               <span className="p-input-icon-right">
                 <i className="pi pi-folder" />
                 <InputText
-                  id="numeroSolicitud"
-                  name="numeroSolicitud"
+                  id="noSolicitud"
+                  name="noSolicitud"
                   type="text"
-                  value={formik.values.numeroSolicitud}
+                  value={formik.values.noSolicitud}
                   onChange={formik.handleChange}
                   className={classNames({
-                    "p-invalid": isFormFieldValid("numeroSolicitud"),
+                    "p-invalid": isFormFieldValid("noSolicitud"),
                   })}
                 />
               </span>
-              {getFormErrorMessage("numeroSolicitud")}
+              {getFormErrorMessage("noSolicitud")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
@@ -166,9 +163,9 @@ const ConsultaForm = () => {
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
-                htmlFor="fechaExpDuiSolicitante"
+                htmlFor="fechaExpiracionDUI"
                 className={classNames({
-                  "p-error": isFormFieldValid("fechaExpDuiSolicitante"),
+                  "p-error": isFormFieldValid("fechaExpiracionDUI"),
                 })}
               >
                 Fecha expiración DUI del solicitante:
@@ -176,19 +173,19 @@ const ConsultaForm = () => {
               <span className="p-input-icon-right">
                 <i className="pi pi-calendar" />
                 <Calendar
-                  id="fechaExpDuiSolicitante"
-                  name="fechaExpDuiSolicitante"
-                  value={formik.values.fechaExpDuiSolicitante}
+                  id="fechaExpiracionDUI"
+                  name="fechaExpiracionDUI"
+                  value={formik.values.fechaExpiracionDUI}
                   onChange={formik.handleChange}
                   dateFormat="dd/mm/yy"
                   mask="99/99/9999"
                   showIcon
                   className={classNames({
-                    "p-invalid": isFormFieldValid("fechaExpDuiSolicitante"),
+                    "p-invalid": isFormFieldValid("fechaExpiracionDUI"),
                   })}
                 />
               </span>
-              {getFormErrorMessage("fechaExpDuiSolicitante")}
+              {getFormErrorMessage("fechaExpiracionDUI")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <Button label="Consultar" icon="pi pi-check" type="submit" />
@@ -212,21 +209,35 @@ const ConsultaForm = () => {
           ></i>
         </div>
         <p style={{ textAlign: "justify" }}>
-          Gracias por consultar nuestro servicio de consulta de asegurados en
-          línea. Se ha encontrado información válida del asegurado, por tanto
-          puede proseguir con su tramite de reclamo de seguros. Haga clic en el
-          botón <strong>SI</strong> para continuar.
+          Gracias por usar nuestro servicio de consulta de trámites en línea. Se
+          ha encontrado información válida de la solicitud, a continuación se
+          muestra el detalle de reclamo de seguros.
         </p>
-        <p>
-          Nombre completo: <strong>{asegurado.nombreCompleto}</strong>
-        </p>
-        <p>
-          Lugar de trabajo: <strong>{asegurado.lugarTrabajo}</strong>
-        </p>
-        <p>
-          Condición:{" "}
-          <strong>{asegurado.condicion?.descripcionCondicion}</strong>
-        </p>
+
+        {
+          <div>
+            <div className="card">
+              <DataTable value={solicitudes} responsiveLayout="scroll">
+                <Column
+                  field="idSolicitudReclamoPK.noSolicitud"
+                  header="Número solicitud"
+                ></Column>
+                <Column
+                  field="idSolicitudReclamoPK.tipoSeguro"
+                  header="Tipo seguro"
+                ></Column>
+                <Column
+                  field="calidadSolicitante"
+                  header="Tipo solicitante"
+                ></Column>
+                <Column
+                  field="estadoSolicitud"
+                  header="Estado solicitud"
+                ></Column>
+              </DataTable>
+            </div>
+          </div>
+        }
       </Dialog>
       <Dialog
         header="Detalle de búsqueda"
@@ -245,8 +256,7 @@ const ConsultaForm = () => {
         <p style={{ textAlign: "justify" }}>
           Lo sentimos, no existe registro que coincida con los datos
           proporcionados, favor verificar la información proporcionada en el
-          formulario e intentar de nuevo. Haga clic en el botón{" "}
-          <strong>SI</strong> para continuar.
+          formulario e intentar de nuevo.
         </p>
       </Dialog>
     </React.Fragment>

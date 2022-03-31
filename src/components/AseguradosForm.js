@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { InputText } from "primereact/inputtext";
 import { InputMask } from "primereact/inputmask";
@@ -14,6 +15,12 @@ const AseguradosForm = () => {
   const [showDlgFound, setShowDlgFound] = useState(false);
   const [showDlgNotFound, setShowDlgNotFound] = useState(false);
   const [asegurado, setAsegurado] = useState({});
+
+  const navigate = useNavigate();
+
+  const onComenzarTramite = () => {
+    navigate("/reclamo");
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -78,7 +85,10 @@ const AseguradosForm = () => {
         <Button
           label="SI"
           icon="pi pi-check"
-          onClick={() => setShowDlgFound(false)}
+          onClick={() => {
+            //setShowDlgFound(false);
+            onComenzarTramite();
+          }}
           autoFocus
         />
         <Button
@@ -208,10 +218,10 @@ const AseguradosForm = () => {
           ></i>
         </div>
         <p style={{ textAlign: "justify" }}>
-          Gracias por consultar nuestro servicio de consulta de asegurados en
-          línea. Se ha encontrado información válida del asegurado, por tanto
-          puede proseguir con su tramite de reclamo de seguros. Haga clic en el
-          botón <strong>SI</strong> para continuar.
+          Gracias por usar nuestro servicio de consulta de asegurados en línea.
+          Se ha encontrado información válida del asegurado, por tanto puede
+          proseguir con su tramite de reclamo de seguros. Haga clic en el botón{" "}
+          <strong>SI</strong> para continuar.
         </p>
         <p>
           Nombre completo: <strong>{asegurado.nombreCompleto}</strong>

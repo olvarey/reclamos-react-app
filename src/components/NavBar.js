@@ -16,11 +16,11 @@ const NavBar = () => {
             Consulta de trámites
           </NavLink>
         </Nav.Item>
-        <Nav.Item>
+        {/* <Nav.Item>
           <NavLink to="/reclamo" className="nav-link">
             Reclamo
           </NavLink>
-        </Nav.Item>
+        </Nav.Item> */}
       </Nav>
     </React.Fragment>
   );

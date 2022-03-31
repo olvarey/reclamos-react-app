@@ -23,16 +23,16 @@ function App() {
   return (
     <Router initialEntries={["/"]}>
       <div className="p-d-inline-flex">
-        <Header></Header>
+        <Header />
         <div style={{ width: "450px", margin: "auto" }}>
-          <NavBar></NavBar>
+          <NavBar />
           <Routes>
             <Route exact path="/" element={<AseguradosForm />} />
             <Route path="/consulta" element={<ConsultaForm />} />
             <Route path="/reclamo" element={<ReclamoForm />} />
           </Routes>
         </div>
-        <Footer></Footer>
+        <Footer />
       </div>
     </Router>
   );
