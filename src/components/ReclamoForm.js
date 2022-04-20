@@ -5,6 +5,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputMask } from "primereact/inputmask";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
+import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
@@ -47,7 +48,6 @@ const ReclamoForm = () => {
 
   useEffect(() => {
     fetchTiposSolicitante();
-    fetchTiposSeguro();
   }, []);
 
   const formik = useFormik({
@@ -72,7 +72,7 @@ const ReclamoForm = () => {
       telefonoRepresentado: "",
       celularRepresentado: "",
       emailRepresentado: "",
-      tipoSeguro: "",
+      menorEdad: false,
     },
     validate: (data) => {
       let errors = {};
@@ -168,11 +168,6 @@ const ReclamoForm = () => {
         errors.emailRepresentado =
           "Dirección de correo incorrecta. Ejem. nombre@email.com";
       }
-
-      if (!data.tipoSeguro) {
-        errors.tipoSeguro = "Tipo de seguro es requerido.";
-      }
-
       return errors;
     },
     onSubmit: (data) => {
@@ -255,33 +250,6 @@ const ReclamoForm = () => {
       >
         <div className="p-fluid">
           <form onSubmit={formik.handleSubmit} className="p-fluid">
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="tipoSeguro"
-                className={classNames({
-                  "p-error": isFormFieldValid("tipoSeguro"),
-                })}
-              >
-                Tipo de seguro:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <Dropdown
-                  id="tipoSeguro"
-                  name="tipoSeguro"
-                  value={formik.values.tipoSeguro}
-                  onChange={formik.handleChange}
-                  options={tiposSeguro}
-                  optionLabel="nombreSeguro"
-                  optionValue="codigoSeguro"
-                  placeholder="Selecccione una opción"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("tipoSeguro"),
-                  })}
-                />
-              </span>
-              {getFormErrorMessage("tipoSeguro")}
-            </div>
             <div className="p-field">
               <label
                 htmlFor="nombreCompletoSolicitante"
@@ -533,7 +501,7 @@ const ReclamoForm = () => {
               </span>
               {getFormErrorMessage("observacion")}
             </div>
-            <div className="p-field">
+            <div className="p-field" style={{ marginTop: "10px" }}>
               <label
                 htmlFor="nombreCompletoRepresentado"
                 className={classNames({
@@ -556,6 +524,25 @@ const ReclamoForm = () => {
                 />
               </span>
               {getFormErrorMessage("nombreCompletoRepresentado")}
+            </div>
+            <div className="p-field" style={{ marginTop: "10px" }}>
+              <Checkbox
+                inputId="menorEdad"
+                name="menorEdad"
+                checked={formik.values.menorEdad}
+                onChange={formik.handleChange}
+                className={classNames({
+                  "p-invalid": isFormFieldValid("menorEdad"),
+                })}
+              />
+              <label
+                htmlFor="menorEdad"
+                className={classNames({
+                  "p-error": isFormFieldValid("menorEdad"),
+                })}
+              >
+                &nbsp;&nbsp;Beneficiario menor de edad?
+              </label>
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label

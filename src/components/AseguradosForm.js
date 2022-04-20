@@ -18,7 +18,7 @@ const AseguradosForm = () => {
 
   const navigate = useNavigate();
 
-  const onComenzarTramite = () => {
+  const onProcedureStart = () => {
     navigate("/reclamo");
   };
 
@@ -87,7 +87,7 @@ const AseguradosForm = () => {
           icon="pi pi-check"
           onClick={() => {
             //setShowDlgFound(false);
-            onComenzarTramite();
+            onProcedureStart();
           }}
           autoFocus
         />
