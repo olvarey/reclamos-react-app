@@ -172,23 +172,18 @@ const ReclamoForm = () => {
     },
     onSubmit: (data) => {
       setFormData(data);
-      axios
-        .get("http://localhost:8181/maestro", {
-          params: {
-            nombre: data.nombreCompleto.trim().toUpperCase(),
-            dui: data.dui,
-            codigo: data.codigoAsegurado,
-          },
-        })
-        .then((res) => {
-          if (res.data) {
-            setReclamo(res.data);
-            setShowDlgFound(true);
-          } else {
-            setShowDlgNotFound(true);
-          }
-        })
-        .catch((err) => {});
+      console.log(data);
+      // axios
+      //   .post("http://localhost:8080/solicitud", data)
+      //   .then((res) => {
+      //     if (res.data) {
+      //       setReclamo(res.data);
+      //       setShowDlgFound(true);
+      //     } else {
+      //       setShowDlgNotFound(true);
+      //     }
+      //   })
+      //   .catch((err) => {});
       formik.resetForm();
     },
   });
