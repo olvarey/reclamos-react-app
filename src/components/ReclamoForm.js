@@ -173,17 +173,17 @@ const ReclamoForm = () => {
     onSubmit: (data) => {
       setFormData(data);
       console.log(data);
-      // axios
-      //   .post("http://localhost:8080/solicitud", data)
-      //   .then((res) => {
-      //     if (res.data) {
-      //       setReclamo(res.data);
-      //       setShowDlgFound(true);
-      //     } else {
-      //       setShowDlgNotFound(true);
-      //     }
-      //   })
-      //   .catch((err) => {});
+      axios
+        .post("http://localhost:8080/api-reclamos/v1/solicitud", data)
+        .then((res) => {
+          if (res.data) {
+            setReclamo(res.data);
+            setShowDlgFound(true);
+          } else {
+            setShowDlgNotFound(true);
+          }
+        })
+        .catch((err) => {});
       formik.resetForm();
     },
   });

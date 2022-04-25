@@ -58,6 +58,7 @@ const AseguradosForm = () => {
         .then((res) => {
           if (res.data) {
             setAsegurado(res.data);
+            localStorage.setItem("asegurado", JSON.stringify(res.data));
             setShowDlgFound(true);
           } else {
             setShowDlgNotFound(true);
