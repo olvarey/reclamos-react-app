@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 
 const ReclamoForm = () => {
+  const [asegurado, setAsegurado] = useState({});
   const [formData, setFormData] = useState({});
   const [showDlgFound, setShowDlgFound] = useState(false);
   const [showDlgNotFound, setShowDlgNotFound] = useState(false);
@@ -47,6 +48,7 @@ const ReclamoForm = () => {
   };
 
   useEffect(() => {
+    setAsegurado(JSON.parse(localStorage.getItem("asegurado")));
     fetchTiposSolicitante();
   }, []);
 
@@ -73,6 +75,13 @@ const ReclamoForm = () => {
       celularRepresentado: "",
       emailRepresentado: "",
       menorEdad: false,
+      //ASEGURADO
+      codigoAfiliado: "",
+      codigoCondicion: 0,
+      dui: "",
+      lugarTrabajo: "",
+      nit: "",
+      nombreCompleto: "",
     },
     validate: (data) => {
       let errors = {};
@@ -171,14 +180,23 @@ const ReclamoForm = () => {
       return errors;
     },
     onSubmit: (data) => {
-      setFormData(data);
+      //SETTING ASEGURADO DATA
+      data.codigoAfiliado = asegurado.codigoAfiliado;
+      data.codigoCondicion = asegurado.condicion.codigoCondicion;
+      data.dui = asegurado.dui;
+      data.lugarTrabajo = asegurado.lugarTrabajo;
+      data.nit = asegurado.nit;
+      data.nombreCompleto = asegurado.nombreCompleto;
+      data.fechaExpDuiSolicitante = formatDate(
+        formik.values.fechaExpDuiSolicitante
+      );
       console.log(data);
       axios
         .post("http://localhost:8080/api-reclamos/v1/solicitud", data)
         .then((res) => {
-          if (res.data) {
-            setReclamo(res.data);
+          if (res.status === 200) {
             setShowDlgFound(true);
+            localStorage.clear();
           } else {
             setShowDlgNotFound(true);
           }
@@ -187,6 +205,11 @@ const ReclamoForm = () => {
       formik.resetForm();
     },
   });
+
+  const formatDate = (date) => {
+    const [dateStr] = date.toISOString().split("T");
+    return dateStr;
+  };
 
   const isFormFieldValid = (name) =>
     !!(formik.touched[name] && formik.errors[name]);
