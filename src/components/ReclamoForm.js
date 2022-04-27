@@ -23,9 +23,12 @@ const ReclamoForm = () => {
   const [tiposSolicitante, setTiposSolicitantes] = useState([]);
   const [tiposSeguro, setTiposSeguro] = useState([]);
 
+  const baseURLAsegurado = "http://localhost:8181/api-asegurados/v1/";
+  const baseURLReclamos = "http://localhost:8080/api-reclamos/v1/";
+
   const fetchTiposSolicitante = () => {
     axios
-      .get("http://localhost:8181/api-asegurados/v1/tipos-solicitante")
+      .get(baseURLAsegurado + "tipos-solicitante")
       .then((res) => {
         if (res.data) {
           setTiposSolicitantes(res.data);
@@ -37,7 +40,7 @@ const ReclamoForm = () => {
 
   const fetchTiposSeguro = () => {
     axios
-      .get("http://localhost:8181/api-asegurados/v1/tipos-seguro")
+      .get(baseURLAsegurado + "tipos-seguro")
       .then((res) => {
         if (res.data) {
           setTiposSeguro(res.data);
@@ -57,7 +60,7 @@ const ReclamoForm = () => {
       //SOLICITANTE
       nombreCompletoSolicitante: "",
       duiSolicitante: "",
-      fechaExpDuiSolicitante: null,
+      fechaExpiracionpDUISolicitante: null,
       nitSolicitante: "",
       tipoSolicitante: "",
       direccionSolicitante: "",
@@ -68,7 +71,7 @@ const ReclamoForm = () => {
       //REPRESENTADO
       nombreCompletoRepresentado: "",
       duiRepresentado: "",
-      fechaExpDuiRepresentado: null,
+      fechaExpiracionpDUIRepresentado: null,
       nitRepresentado: "",
       direccionRepresentado: "",
       telefonoRepresentado: "",
@@ -77,11 +80,11 @@ const ReclamoForm = () => {
       menorEdad: false,
       //ASEGURADO
       codigoAfiliado: "",
+      nombreCompletoAsegurado: "",
+      duiAsegurado: "",
+      nitAsegurado: "",
+      lugarTrabajoAsegurado: "",
       codigoCondicion: 0,
-      dui: "",
-      lugarTrabajo: "",
-      nit: "",
-      nombreCompleto: "",
     },
     validate: (data) => {
       let errors = {};
@@ -96,8 +99,8 @@ const ReclamoForm = () => {
         errors.duiSolicitante = "DUI del solicitante es requerido.";
       }
 
-      if (!data.fechaExpDuiSolicitante) {
-        errors.fechaExpDuiSolicitante =
+      if (!data.fechaExpiracionpDUISolicitante) {
+        errors.fechaExpiracionpDUISolicitante =
           "Fecha expiración DUI del solicitante es requerido.";
       }
 
@@ -146,8 +149,8 @@ const ReclamoForm = () => {
         errors.duiRepresentado = "DUI del representado es requerido.";
       }
 
-      if (!data.fechaExpDuiRepresentado) {
-        errors.fechaExpDuiRepresentado =
+      if (!data.fechaExpiracionpDUIRepresentado) {
+        errors.fechaExpiracionpDUIRepresentado =
           "Fecha expiración DUI del representado es requerido.";
       }
 
@@ -182,17 +185,14 @@ const ReclamoForm = () => {
     onSubmit: (data) => {
       //SETTING ASEGURADO DATA
       data.codigoAfiliado = asegurado.codigoAfiliado;
+      data.nombreCompletoAsegurado = asegurado.nombreCompleto;
+      data.duiAsegurado = asegurado.dui;
+      data.nitAsegurado = asegurado.nit;
+      data.lugarTrabajoAsegurado = asegurado.lugarTrabajo;
       data.codigoCondicion = asegurado.condicion.codigoCondicion;
-      data.dui = asegurado.dui;
-      data.lugarTrabajo = asegurado.lugarTrabajo;
-      data.nit = asegurado.nit;
-      data.nombreCompleto = asegurado.nombreCompleto;
-      data.fechaExpDuiSolicitante = formatDate(
-        formik.values.fechaExpDuiSolicitante
-      );
-      console.log(data);
+
       axios
-        .post("http://localhost:8080/api-reclamos/v1/solicitud", data)
+        .post(baseURLReclamos + "solicitud", data)
         .then((res) => {
           if (res.status === 200) {
             setShowDlgFound(true);
@@ -205,11 +205,6 @@ const ReclamoForm = () => {
       formik.resetForm();
     },
   });
-
-  const formatDate = (date) => {
-    const [dateStr] = date.toISOString().split("T");
-    return dateStr;
-  };
 
   const isFormFieldValid = (name) =>
     !!(formik.touched[name] && formik.errors[name]);
@@ -319,9 +314,9 @@ const ReclamoForm = () => {
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
-                htmlFor="fechaExpDuiSolicitante"
+                htmlFor="fechaExpiracionpDUISolicitante"
                 className={classNames({
-                  "p-error": isFormFieldValid("fechaExpDuiSolicitante"),
+                  "p-error": isFormFieldValid("fechaExpiracionpDUISolicitante"),
                 })}
               >
                 Fecha expiración DUI del solicitante:
@@ -329,19 +324,21 @@ const ReclamoForm = () => {
               <span className="p-input-icon-right">
                 <i className="pi pi-calendar" />
                 <Calendar
-                  id="fechaExpDuiSolicitante"
-                  name="fechaExpDuiSolicitante"
-                  value={formik.values.fechaExpDuiSolicitante}
+                  id="fechaExpiracionpDUISolicitante"
+                  name="fechaExpiracionpDUISolicitante"
+                  value={formik.values.fechaExpiracionpDUISolicitante}
                   onChange={formik.handleChange}
                   dateFormat="dd/mm/yy"
                   mask="99/99/9999"
                   showIcon
                   className={classNames({
-                    "p-invalid": isFormFieldValid("fechaExpDuiSolicitante"),
+                    "p-invalid": isFormFieldValid(
+                      "fechaExpiracionpDUISolicitante"
+                    ),
                   })}
                 />
               </span>
-              {getFormErrorMessage("fechaExpDuiSolicitante")}
+              {getFormErrorMessage("fechaExpiracionpDUISolicitante")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
@@ -589,9 +586,11 @@ const ReclamoForm = () => {
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
-                htmlFor="fechaExpDuiRepresentado"
+                htmlFor="fechaExpiracionpDUIRepresentado"
                 className={classNames({
-                  "p-error": isFormFieldValid("fechaExpDuiRepresentado"),
+                  "p-error": isFormFieldValid(
+                    "fechaExpiracionpDUIRepresentado"
+                  ),
                 })}
               >
                 Fecha expiración DUI del representado:
@@ -599,19 +598,21 @@ const ReclamoForm = () => {
               <span className="p-input-icon-right">
                 <i className="pi pi-credit-card" />
                 <Calendar
-                  id="fechaExpDuiRepresentado"
-                  name="fechaExpDuiRepresentado"
-                  value={formik.values.fechaExpDuiRepresentado}
+                  id="fechaExpiracionpDUIRepresentado"
+                  name="fechaExpiracionpDUIRepresentado"
+                  value={formik.values.fechaExpiracionpDUIRepresentado}
                   onChange={formik.handleChange}
                   dateFormat="dd/mm/yy"
                   mask="99/99/9999"
                   showIcon
                   className={classNames({
-                    "p-invalid": isFormFieldValid("fechaExpDuiRepresentado"),
+                    "p-invalid": isFormFieldValid(
+                      "fechaExpiracionpDUIRepresentado"
+                    ),
                   })}
                 />
               </span>
-              {getFormErrorMessage("fechaExpDuiRepresentado")}
+              {getFormErrorMessage("fechaExpiracionpDUIRepresentado")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
