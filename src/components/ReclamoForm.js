@@ -23,6 +23,7 @@ const ReclamoForm = () => {
 
   const [tiposSolicitante, setTiposSolicitantes] = useState([]);
   const [tiposSeguro, setTiposSeguro] = useState([]);
+  const [selectedSolicitante, setSelectedSolicitante] = useState(null);
 
   const baseURLAsegurado = "http://localhost:8181/api-asegurados/v1/";
   const baseURLReclamos = "http://localhost:8080/api-reclamos/v1/";
@@ -54,7 +55,11 @@ const ReclamoForm = () => {
   const navigate = useNavigate();
 
   const onProcedureStart = () => {
-    navigate("/consulta");
+    navigate("/");
+  };
+
+  const onTipoSolicitanteChange = () => {
+    console.log("it's working!");
   };
 
   useEffect(() => {
@@ -84,7 +89,12 @@ const ReclamoForm = () => {
       telefonoRepresentado: "",
       celularRepresentado: "",
       emailRepresentado: "",
-      menorEdad: false,
+      nombreCompletoMadreRepresentado: "",
+      duiMadreRepresentado: "",
+      fechaExpiracionpDUIMadreRepresentado: null,
+      nombreCompletoPadreRepresentado: "",
+      duiPadreRepresentado: "",
+      fechaExpiracionpDUIPadreRepresentado: null,
       //ASEGURADO
       codigoAfiliado: "",
       nombreCompletoAsegurado: "",
@@ -243,7 +253,7 @@ const ReclamoForm = () => {
         <Button
           label="ACEPTAR"
           icon="pi pi-check"
-          onClick={() => setShowDlgNotFound(false)}
+          onClick={() => onProcedureStart()}
           autoFocus
         />
       </div>
@@ -258,6 +268,33 @@ const ReclamoForm = () => {
       >
         <div className="p-fluid">
           <form onSubmit={formik.handleSubmit} className="p-fluid">
+            <div className="p-field" style={{ marginTop: "10px" }}>
+              <label
+                htmlFor="tipoSolicitante"
+                className={classNames({
+                  "p-error": isFormFieldValid("tipoSolicitante"),
+                })}
+              >
+                Tipo de solicitante:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-credit-card" />
+                <Dropdown
+                  id="tipoSolicitante"
+                  name="tipoSolicitante"
+                  value={formik.values.tipoSolicitante}
+                  onChange={formik.handleChange}
+                  options={tiposSolicitante}
+                  optionLabel="descripcion"
+                  optionValue="noCalidad"
+                  placeholder="Selecccione una opción"
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("tipoSolicitante"),
+                  })}
+                />
+              </span>
+              {getFormErrorMessage("tipoSolicitante")}
+            </div>
             <div className="p-field">
               <label
                 htmlFor="nombreCompletoSolicitante"
@@ -360,33 +397,6 @@ const ReclamoForm = () => {
                 ></InputMask>
               </span>
               {getFormErrorMessage("nitSolicitante")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="tipoSolicitante"
-                className={classNames({
-                  "p-error": isFormFieldValid("tipoSolicitante"),
-                })}
-              >
-                Tipo de solicitante:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <Dropdown
-                  id="tipoSolicitante"
-                  name="tipoSolicitante"
-                  value={formik.values.tipoSolicitante}
-                  onChange={formik.handleChange}
-                  options={tiposSolicitante}
-                  optionLabel="descripcion"
-                  optionValue="noCalidad"
-                  placeholder="Selecccione una opción"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("tipoSolicitante"),
-                  })}
-                />
-              </span>
-              {getFormErrorMessage("tipoSolicitante")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
@@ -534,25 +544,6 @@ const ReclamoForm = () => {
                 />
               </span>
               {getFormErrorMessage("nombreCompletoRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <Checkbox
-                inputId="menorEdad"
-                name="menorEdad"
-                checked={formik.values.menorEdad}
-                onChange={formik.handleChange}
-                className={classNames({
-                  "p-invalid": isFormFieldValid("menorEdad"),
-                })}
-              />
-              <label
-                htmlFor="menorEdad"
-                className={classNames({
-                  "p-error": isFormFieldValid("menorEdad"),
-                })}
-              >
-                &nbsp;&nbsp;Beneficiario menor de edad?
-              </label>
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
@@ -786,10 +777,9 @@ const ReclamoForm = () => {
           ></i>
         </div>
         <p style={{ textAlign: "justify" }}>
-          Lo sentimos, no se puedo guardar la información proporcionada,
-          favor verificar la información en el formulario e
-          intentar de nuevo. Haga clic en el botón <strong>SI</strong> para
-          continuar.
+          Lo sentimos, no se puedo guardar la información proporcionada, favor
+          verificar la información en el formulario e intentar de nuevo. Haga
+          clic en el botón <strong>SI</strong> para continuar.
         </p>
       </Dialog>
     </React.Fragment>
