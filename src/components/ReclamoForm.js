@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -48,6 +49,12 @@ const ReclamoForm = () => {
         }
       })
       .catch((err) => {});
+  };
+
+  const navigate = useNavigate();
+
+  const onProcedureStart = () => {
+    navigate("/consulta");
   };
 
   useEffect(() => {
@@ -221,16 +228,10 @@ const ReclamoForm = () => {
     return (
       <div>
         <Button
-          label="SI"
+          label="ACEPTAR"
           icon="pi pi-check"
-          onClick={() => setShowDlgFound(false)}
+          onClick={() => onProcedureStart()}
           autoFocus
-        />
-        <Button
-          label="NO"
-          icon="pi pi-times"
-          onClick={() => setShowDlgFound(false)}
-          className="p-button-text"
         />
       </div>
     );
@@ -240,16 +241,10 @@ const ReclamoForm = () => {
     return (
       <div>
         <Button
-          label="SI"
+          label="ACEPTAR"
           icon="pi pi-check"
           onClick={() => setShowDlgNotFound(false)}
           autoFocus
-        />
-        <Button
-          label="NO"
-          icon="pi pi-times"
-          onClick={() => setShowDlgNotFound(false)}
-          className="p-button-text"
         />
       </div>
     );
@@ -747,7 +742,7 @@ const ReclamoForm = () => {
       </Card>
 
       <Dialog
-        header="Detalle de búsqueda"
+        header="Ingreso de información"
         visible={showDlgFound}
         onHide={() => setShowDlgFound(false)}
         breakpoints={{ "960px": "75vw" }}
@@ -761,23 +756,23 @@ const ReclamoForm = () => {
           ></i>
         </div>
         <p style={{ textAlign: "justify" }}>
-          Gracias por consultar nuestro servicio de consulta de asegurados en
-          línea. Se ha encontrado información válida del asegurado, por tanto
-          puede proseguir con su tramite de reclamo de seguros. Haga clic en el
-          botón <strong>SI</strong> para continuar.
+          La información proporcionada a sido guardada con éxito. A continuación
+          verá información importante del reclamo para que pueda realizar las
+          gestiones necesarias. Le recomendamos guardar estos datos para futuras
+          consultas.
         </p>
         <p>
-          Nombre completo: <strong>{""}</strong>
+          Nombre del asegurado: <strong>{""}</strong>
         </p>
         <p>
-          Lugar de trabajo: <strong>{""}</strong>
+          Número de solicitud: <strong>{""}</strong>
         </p>
         <p>
-          Condición: <strong>{""}</strong>
+          Nombre del solicitante: <strong>{""}</strong>
         </p>
       </Dialog>
       <Dialog
-        header="Detalle de búsqueda"
+        header="Ingreso de información"
         visible={showDlgNotFound}
         onHide={() => setShowDlgNotFound(false)}
         breakpoints={{ "960px": "75vw" }}
@@ -791,10 +786,10 @@ const ReclamoForm = () => {
           ></i>
         </div>
         <p style={{ textAlign: "justify" }}>
-          Lo sentimos, no existe registro que coincida con los datos
-          proporcionados, favor verificar la información proporcionada en el
-          formulario e intentar de nuevo. Haga clic en el botón{" "}
-          <strong>SI</strong> para continuar.
+          Lo sentimos, no se puedo guardar la información proporcionada,
+          favor verificar la información en el formulario e
+          intentar de nuevo. Haga clic en el botón <strong>SI</strong> para
+          continuar.
         </p>
       </Dialog>
     </React.Fragment>
