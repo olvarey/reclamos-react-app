@@ -6,7 +6,6 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputMask } from "primereact/inputmask";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
@@ -24,6 +23,8 @@ const ReclamoForm = () => {
   const [tiposSolicitante, setTiposSolicitantes] = useState([]);
   const [tiposSeguro, setTiposSeguro] = useState([]);
   const [selectedSolicitante, setSelectedSolicitante] = useState(null);
+  const [showInfoRepresentado, setShowInfoRepresentado] = useState(false);
+  const [showInfoPadres, setShowInfoPadres] = useState(false);
 
   const baseURLAsegurado = "http://localhost:8181/api-asegurados/v1/";
   const baseURLReclamos = "http://localhost:8080/api-reclamos/v1/";
@@ -58,8 +59,15 @@ const ReclamoForm = () => {
     navigate("/");
   };
 
-  const onTipoSolicitanteChange = () => {
-    console.log("it's working!");
+  const onTipoSolicitanteChange = (e) => {
+    formik.handleChange(e);
+    let selectedTipoSolicitante = e.target.value;
+    setShowInfoRepresentado(
+      selectedTipoSolicitante === "04" ||
+        selectedTipoSolicitante === "05" ||
+        selectedTipoSolicitante === "06"
+    );
+    setShowInfoPadres(selectedTipoSolicitante === "06");
   };
 
   useEffect(() => {
@@ -91,9 +99,11 @@ const ReclamoForm = () => {
       emailRepresentado: "",
       nombreCompletoMadreRepresentado: "",
       duiMadreRepresentado: "",
+      nitMadreRepresentado: "",
       fechaExpiracionpDUIMadreRepresentado: null,
       nombreCompletoPadreRepresentado: "",
       duiPadreRepresentado: "",
+      nitPadreRepresentado: "",
       fechaExpiracionpDUIPadreRepresentado: null,
       //ASEGURADO
       codigoAfiliado: "",
@@ -197,6 +207,48 @@ const ReclamoForm = () => {
         errors.emailRepresentado =
           "Dirección de correo incorrecta. Ejem. nombre@email.com";
       }
+
+      //MADRE
+      if (!data.nombreCompletoMadreRepresentado) {
+        errors.nombreCompletoMadreRepresentado =
+          "Nombre completo de la madre de representado es requerido.";
+      }
+
+      if (!data.duiMadreRepresentado) {
+        errors.duiMadreRepresentado =
+          "DUI de la madre del representado es requerido.";
+      }
+
+      if (!data.fechaExpiracionpDUIMadreRepresentado) {
+        errors.fechaExpiracionpDUIMadreRepresentado =
+          "Fecha expiración DUI de la madre del representado es requerido.";
+      }
+
+      if (!data.nitMadreRepresentado) {
+        errors.nitMadreRepresentado =
+          "NIT de la madre del representado es requerido.";
+      }
+
+      //PADRE
+      if (!data.nombreCompletoPadreRepresentado) {
+        errors.nombreCompletoPadreRepresentado =
+          "Nombre completo del padre de representado es requerido.";
+      }
+
+      if (!data.duiPadreRepresentado) {
+        errors.duiPadreRepresentado =
+          "DUI del padre del representado es requerido.";
+      }
+
+      if (!data.fechaExpiracionpDUIPadreRepresentado) {
+        errors.fechaExpiracionpDUIPadreRepresentado =
+          "Fecha expiración DUI del padre del representado es requerido.";
+      }
+
+      if (!data.nitMadreRepresentado) {
+        errors.nitMadreRepresentado =
+          "NIT del padre del representado es requerido.";
+      }
       return errors;
     },
     onSubmit: (data) => {
@@ -283,7 +335,7 @@ const ReclamoForm = () => {
                   id="tipoSolicitante"
                   name="tipoSolicitante"
                   value={formik.values.tipoSolicitante}
-                  onChange={formik.handleChange}
+                  onChange={onTipoSolicitanteChange}
                   options={tiposSolicitante}
                   optionLabel="descripcion"
                   optionValue="noCalidad"
@@ -521,210 +573,439 @@ const ReclamoForm = () => {
               </span>
               {getFormErrorMessage("observacion")}
             </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="nombreCompletoRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("nombreCompletoRepresentado"),
-                })}
-              >
-                Nombre completo del representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-user" />
-                <InputText
-                  id="nombreCompletoRepresentado"
-                  name="nombreCompletoRepresentado"
-                  type="text"
-                  value={formik.values.nombreCompletoRepresentado}
-                  onChange={formik.handleChange}
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("nombreCompletoRepresentado"),
-                  })}
-                />
-              </span>
-              {getFormErrorMessage("nombreCompletoRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="duiRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("duiRepresentado"),
-                })}
-              >
-                DUI del representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-id-card" />
-                <InputMask
-                  id="duiRepresentado"
-                  name="duiRepresentado"
-                  mask="999999999"
-                  value={formik.values.duiRepresentado}
-                  onChange={formik.handleChange}
-                  placeholder="999999999"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("duiRepresentado"),
-                  })}
-                ></InputMask>
-              </span>
-              {getFormErrorMessage("duiRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="fechaExpiracionpDUIRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid(
-                    "fechaExpiracionpDUIRepresentado"
-                  ),
-                })}
-              >
-                Fecha expiración DUI del representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <Calendar
-                  id="fechaExpiracionpDUIRepresentado"
-                  name="fechaExpiracionpDUIRepresentado"
-                  value={formik.values.fechaExpiracionpDUIRepresentado}
-                  onChange={formik.handleChange}
-                  dateFormat="dd/mm/yy"
-                  mask="99/99/9999"
-                  showIcon
-                  className={classNames({
-                    "p-invalid": isFormFieldValid(
-                      "fechaExpiracionpDUIRepresentado"
-                    ),
-                  })}
-                />
-              </span>
-              {getFormErrorMessage("fechaExpiracionpDUIRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="nitRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("nitRepresentado"),
-                })}
-              >
-                NIT del representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-credit-card" />
-                <InputMask
-                  id="nitRepresentado"
-                  name="nitRepresentado"
-                  value={formik.values.nitRepresentado}
-                  onChange={formik.handleChange}
-                  mask="9999-999999-999-9"
-                  placeholder="9999-999999-999-9"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("nitRepresentado"),
-                  })}
-                  keyfilter="pint"
-                ></InputMask>
-              </span>
-              {getFormErrorMessage("nitRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="direccionRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("direccionRepresentado"),
-                })}
-              >
-                Dirección de representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-book" />
-                <InputTextarea
-                  id="direccionRepresentado"
-                  name="direccionRepresentado"
-                  value={formik.values.direccionRepresentado}
-                  onChange={formik.handleChange}
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("direccionRepresentado"),
-                  })}
-                  keyfilter="pint"
-                ></InputTextarea>
-              </span>
-              {getFormErrorMessage("direccionRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="telefonoRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("telefonoRepresentado"),
-                })}
-              >
-                Teléfono de representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-phone" />
-                <InputMask
-                  id="telefonoRepresentado"
-                  name="telefonoRepresentado"
-                  value={formik.values.telefonoRepresentado}
-                  onChange={formik.handleChange}
-                  mask="9999-9999"
-                  placeholder="9999-9999"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("telefonoRepresentado"),
-                  })}
-                  keyfilter="pint"
-                ></InputMask>
-              </span>
-              {getFormErrorMessage("telefonoRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="celularRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("celularRepresentado"),
-                })}
-              >
-                Celular de representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-phone" />
-                <InputMask
-                  id="celularRepresentado"
-                  name="celularRepresentado"
-                  value={formik.values.celularRepresentado}
-                  onChange={formik.handleChange}
-                  mask="9999-9999"
-                  placeholder="9999-9999"
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("celularRepresentado"),
-                  })}
-                  keyfilter="pint"
-                ></InputMask>
-              </span>
-              {getFormErrorMessage("celularRepresentado")}
-            </div>
-            <div className="p-field" style={{ marginTop: "10px" }}>
-              <label
-                htmlFor="emailRepresentado"
-                className={classNames({
-                  "p-error": isFormFieldValid("emailRepresentado"),
-                })}
-              >
-                Correo electrónico de representado:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-at" />
-                <InputText
-                  id="emailRepresentado"
-                  name="emailRepresentado"
-                  value={formik.values.emailRepresentado}
-                  onChange={formik.handleChange}
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("emailRepresentado"),
-                  })}
-                ></InputText>
-              </span>
-              {getFormErrorMessage("emailRepresentado")}
-            </div>
+            {showInfoRepresentado && (
+              <React.Fragment>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nombreCompletoRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("nombreCompletoRepresentado"),
+                    })}
+                  >
+                    Nombre completo del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="nombreCompletoRepresentado"
+                      name="nombreCompletoRepresentado"
+                      type="text"
+                      value={formik.values.nombreCompletoRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "nombreCompletoRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("nombreCompletoRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="duiRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("duiRepresentado"),
+                    })}
+                  >
+                    DUI del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-id-card" />
+                    <InputMask
+                      id="duiRepresentado"
+                      name="duiRepresentado"
+                      mask="999999999"
+                      value={formik.values.duiRepresentado}
+                      onChange={formik.handleChange}
+                      placeholder="999999999"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("duiRepresentado"),
+                      })}
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("duiRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="fechaExpiracionpDUIRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid(
+                        "fechaExpiracionpDUIRepresentado"
+                      ),
+                    })}
+                  >
+                    Fecha expiración DUI del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-credit-card" />
+                    <Calendar
+                      id="fechaExpiracionpDUIRepresentado"
+                      name="fechaExpiracionpDUIRepresentado"
+                      value={formik.values.fechaExpiracionpDUIRepresentado}
+                      onChange={formik.handleChange}
+                      dateFormat="dd/mm/yy"
+                      mask="99/99/9999"
+                      showIcon
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "fechaExpiracionpDUIRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("fechaExpiracionpDUIRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nitRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("nitRepresentado"),
+                    })}
+                  >
+                    NIT del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-credit-card" />
+                    <InputMask
+                      id="nitRepresentado"
+                      name="nitRepresentado"
+                      value={formik.values.nitRepresentado}
+                      onChange={formik.handleChange}
+                      mask="9999-999999-999-9"
+                      placeholder="9999-999999-999-9"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("nitRepresentado"),
+                      })}
+                      keyfilter="pint"
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("nitRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="direccionRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("direccionRepresentado"),
+                    })}
+                  >
+                    Dirección de representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-book" />
+                    <InputTextarea
+                      id="direccionRepresentado"
+                      name="direccionRepresentado"
+                      value={formik.values.direccionRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("direccionRepresentado"),
+                      })}
+                      keyfilter="pint"
+                    ></InputTextarea>
+                  </span>
+                  {getFormErrorMessage("direccionRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="telefonoRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("telefonoRepresentado"),
+                    })}
+                  >
+                    Teléfono de representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-phone" />
+                    <InputMask
+                      id="telefonoRepresentado"
+                      name="telefonoRepresentado"
+                      value={formik.values.telefonoRepresentado}
+                      onChange={formik.handleChange}
+                      mask="9999-9999"
+                      placeholder="9999-9999"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("telefonoRepresentado"),
+                      })}
+                      keyfilter="pint"
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("telefonoRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="celularRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("celularRepresentado"),
+                    })}
+                  >
+                    Celular de representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-phone" />
+                    <InputMask
+                      id="celularRepresentado"
+                      name="celularRepresentado"
+                      value={formik.values.celularRepresentado}
+                      onChange={formik.handleChange}
+                      mask="9999-9999"
+                      placeholder="9999-9999"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("celularRepresentado"),
+                      })}
+                      keyfilter="pint"
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("celularRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="emailRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("emailRepresentado"),
+                    })}
+                  >
+                    Correo electrónico de representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-at" />
+                    <InputText
+                      id="emailRepresentado"
+                      name="emailRepresentado"
+                      value={formik.values.emailRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("emailRepresentado"),
+                      })}
+                    ></InputText>
+                  </span>
+                  {getFormErrorMessage("emailRepresentado")}
+                </div>
+              </React.Fragment>
+            )}
+            {showInfoPadres && (
+              <React.Fragment>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nombreCompletoMadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid(
+                        "nombreCompletoMadreRepresentado"
+                      ),
+                    })}
+                  >
+                    Nombre completo de la madre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="nombreCompletoMadreRepresentado"
+                      name="nombreCompletoMadreRepresentado"
+                      type="text"
+                      value={formik.values.nombreCompletoMadreRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "nombreCompletoMadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("nombreCompletoMadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="duiMadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("duiMadreRepresentado"),
+                    })}
+                  >
+                    DUI de la madre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-id-card" />
+                    <InputMask
+                      id="duiMadreRepresentado"
+                      name="duiMadreRepresentado"
+                      mask="999999999"
+                      value={formik.values.duiMadreRepresentado}
+                      onChange={formik.handleChange}
+                      placeholder="999999999"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("duiMadreRepresentado"),
+                      })}
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("duiMadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="fechaExpiracionpDUIMadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid(
+                        "fechaExpiracionpDUIMadreRepresentado"
+                      ),
+                    })}
+                  >
+                    Fecha expiración DUI de la madre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-credit-card" />
+                    <Calendar
+                      id="fechaExpiracionpDUIMadreRepresentado"
+                      name="fechaExpiracionpDUIMadreRepresentado"
+                      value={formik.values.fechaExpiracionpDUIMadreRepresentado}
+                      onChange={formik.handleChange}
+                      dateFormat="dd/mm/yy"
+                      mask="99/99/9999"
+                      showIcon
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "fechaExpiracionpDUIMadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("fechaExpiracionpDUIMadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nitMadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("nitMadreRepresentado"),
+                    })}
+                  >
+                    NIT de la madre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-credit-card" />
+                    <InputMask
+                      id="nitMadreRepresentado"
+                      name="nitMadreRepresentado"
+                      value={formik.values.nitMadreRepresentado}
+                      onChange={formik.handleChange}
+                      mask="9999-999999-999-9"
+                      placeholder="9999-999999-999-9"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("nitMadreRepresentado"),
+                      })}
+                      keyfilter="pint"
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("nitMadreRepresentado")}
+                </div>
+
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nombreCompletoPadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid(
+                        "nombreCompletoPadreRepresentado"
+                      ),
+                    })}
+                  >
+                    Nombre completo del padre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="nombreCompletoPadreRepresentado"
+                      name="nombreCompletoPadreRepresentado"
+                      type="text"
+                      value={formik.values.nombreCompletoPadreRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "nombreCompletoPadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("nombreCompletoPadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="duiPadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("duiPadreRepresentado"),
+                    })}
+                  >
+                    DUI del padre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-id-card" />
+                    <InputMask
+                      id="duiPadreRepresentado"
+                      name="duiPadreRepresentado"
+                      mask="999999999"
+                      value={formik.values.duiPadreRepresentado}
+                      onChange={formik.handleChange}
+                      placeholder="999999999"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("duiPadreRepresentado"),
+                      })}
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("duiPadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="fechaExpiracionpDUIPadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid(
+                        "fechaExpiracionpDUIPadreRepresentado"
+                      ),
+                    })}
+                  >
+                    Fecha expiración DUI del padre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-credit-card" />
+                    <Calendar
+                      id="fechaExpiracionpDUIPadreRepresentado"
+                      name="fechaExpiracionpDUIPadreRepresentado"
+                      value={formik.values.fechaExpiracionpDUIPadreRepresentado}
+                      onChange={formik.handleChange}
+                      dateFormat="dd/mm/yy"
+                      mask="99/99/9999"
+                      showIcon
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "fechaExpiracionpDUIPadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("fechaExpiracionpDUIPadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nitPadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("nitPadreRepresentado"),
+                    })}
+                  >
+                    NIT del padre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-credit-card" />
+                    <InputMask
+                      id="nitPadreRepresentado"
+                      name="nitPadreRepresentado"
+                      value={formik.values.nitPadreRepresentado}
+                      onChange={formik.handleChange}
+                      mask="9999-999999-999-9"
+                      placeholder="9999-999999-999-9"
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("nitPadreRepresentado"),
+                      })}
+                      keyfilter="pint"
+                    ></InputMask>
+                  </span>
+                  {getFormErrorMessage("nitPadreRepresentado")}
+                </div>
+              </React.Fragment>
+            )}
             <div className="p-field" style={{ marginTop: "10px" }}>
               <Button label="Enviar" icon="pi pi-check" type="submit" />
             </div>
