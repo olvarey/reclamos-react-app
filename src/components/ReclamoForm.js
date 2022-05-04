@@ -55,12 +55,11 @@ const ReclamoForm = () => {
 
   const navigate = useNavigate();
 
-  const onProcedureStart = () => {
+  const onProcedureEnd = () => {
     navigate("/");
   };
 
   const onTipoSolicitanteChange = (e) => {
-    formik.handleChange(e);
     let selectedTipoSolicitante = e.target.value;
     setShowInfoRepresentado(
       selectedTipoSolicitante === "04" ||
@@ -68,6 +67,7 @@ const ReclamoForm = () => {
         selectedTipoSolicitante === "06"
     );
     setShowInfoPadres(selectedTipoSolicitante === "06");
+    formik.handleChange(e);
   };
 
   useEffect(() => {
@@ -78,7 +78,8 @@ const ReclamoForm = () => {
   const formik = useFormik({
     initialValues: {
       //SOLICITANTE
-      nombreCompletoSolicitante: "",
+      nombresSolicitante: "",
+      apellidosSolicitante: "",
       duiSolicitante: "",
       fechaExpiracionpDUISolicitante: null,
       nitSolicitante: "",
@@ -89,7 +90,8 @@ const ReclamoForm = () => {
       emailSolicitante: "",
       observacion: "",
       //REPRESENTADO
-      nombreCompletoRepresentado: "",
+      nombresRepresentado: "",
+      apellidosRepresentado: "",
       duiRepresentado: "",
       fechaExpiracionpDUIRepresentado: null,
       nitRepresentado: "",
@@ -97,11 +99,13 @@ const ReclamoForm = () => {
       telefonoRepresentado: "",
       celularRepresentado: "",
       emailRepresentado: "",
-      nombreCompletoMadreRepresentado: "",
+      nombresMadreRepresentado: "",
+      apellidosMadreRepresentado: "",
       duiMadreRepresentado: "",
       nitMadreRepresentado: "",
       fechaExpiracionpDUIMadreRepresentado: null,
-      nombreCompletoPadreRepresentado: "",
+      nombresPadreRepresentado: "",
+      apellidosPadreRepresentado: "",
       duiPadreRepresentado: "",
       nitPadreRepresentado: "",
       fechaExpiracionpDUIPadreRepresentado: null,
@@ -117,9 +121,12 @@ const ReclamoForm = () => {
       let errors = {};
 
       //SOLICITANTE
-      if (!data.nombreCompletoSolicitante) {
-        errors.nombreCompletoSolicitante =
-          "Nombre completo del solicitante es requerido.";
+      if (!data.nombresSolicitante) {
+        errors.nombresSolicitante = "Nombres del solicitante es requerido.";
+      }
+
+      if (!data.apellidosSolicitante) {
+        errors.apellidosSolicitante = "Apellidos del solicitante es requerido.";
       }
 
       if (!data.duiSolicitante) {
@@ -166,88 +173,111 @@ const ReclamoForm = () => {
           "Dirección de correo incorrecta. Ejem. nombre@email.com";
       }
 
-      //REPRESENTADO
-      if (!data.nombreCompletoRepresentado) {
-        errors.nombreCompletoRepresentado =
-          "Nombre completo de representado es requerido.";
-      }
+      if (showInfoRepresentado) {
+        //REPRESENTADO
+        if (!data.nombresRepresentado) {
+          errors.nombresRepresentado = "Nombres del representado es requerido.";
+        }
 
-      if (!data.duiRepresentado) {
-        errors.duiRepresentado = "DUI del representado es requerido.";
-      }
+        if (!data.apellidosRepresentado) {
+          errors.apellidosRepresentado =
+            "Apellidos del representado es requerido.";
+        }
 
-      if (!data.fechaExpiracionpDUIRepresentado) {
-        errors.fechaExpiracionpDUIRepresentado =
-          "Fecha expiración DUI del representado es requerido.";
-      }
+        if (!showInfoPadres) {
+          if (!data.duiRepresentado) {
+            errors.duiRepresentado = "DUI del representado es requerido.";
+          }
 
-      if (!data.nitRepresentado) {
-        errors.nitRepresentado = "NIT del representado es requerido.";
-      }
+          if (!data.fechaExpiracionpDUIRepresentado) {
+            errors.fechaExpiracionpDUIRepresentado =
+              "Fecha expiración DUI del representado es requerido.";
+          }
+        }
 
-      if (!data.direccionRepresentado) {
-        errors.direccionRepresentado =
-          "Direción del representado es requerido.";
-      }
+        if (!data.nitRepresentado) {
+          errors.nitRepresentado = "NIT del representado es requerido.";
+        }
 
-      if (!data.telefonoRepresentado) {
-        errors.telefonoRepresentado = "Teléfono del representado es requerido.";
-      }
+        if (!data.direccionRepresentado) {
+          errors.direccionRepresentado =
+            "Direción del representado es requerido.";
+        }
 
-      if (!data.celularRepresentado) {
-        errors.celularRepresentado = "Celular del representado es requerido.";
-      }
+        if (!data.telefonoRepresentado) {
+          errors.telefonoRepresentado =
+            "Teléfono del representado es requerido.";
+        }
 
-      if (!data.emailRepresentado) {
-        errors.emailRepresentado =
-          "Correo electrónico del representado es requerido.";
-      } else if (
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.emailSolicitante)
-      ) {
-        errors.emailRepresentado =
-          "Dirección de correo incorrecta. Ejem. nombre@email.com";
-      }
+        if (!data.celularRepresentado) {
+          errors.celularRepresentado = "Celular del representado es requerido.";
+        }
 
-      //MADRE
-      if (!data.nombreCompletoMadreRepresentado) {
-        errors.nombreCompletoMadreRepresentado =
-          "Nombre completo de la madre de representado es requerido.";
-      }
+        if (!data.emailRepresentado) {
+          errors.emailRepresentado =
+            "Correo electrónico del representado es requerido.";
+        } else if (
+          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(
+            data.emailSolicitante
+          )
+        ) {
+          errors.emailRepresentado =
+            "Dirección de correo incorrecta. Ejem. nombre@email.com";
+        }
 
-      if (!data.duiMadreRepresentado) {
-        errors.duiMadreRepresentado =
-          "DUI de la madre del representado es requerido.";
-      }
+        if (showInfoPadres) {
+          //MADRE
+          if (!data.nombresMadreRepresentado) {
+            errors.nombresMadreRepresentado =
+              "Nombre completo de la madre de representado es requerido.";
+          }
 
-      if (!data.fechaExpiracionpDUIMadreRepresentado) {
-        errors.fechaExpiracionpDUIMadreRepresentado =
-          "Fecha expiración DUI de la madre del representado es requerido.";
-      }
+          if (!data.apellidosMadreRepresentado) {
+            errors.apellidosMadreRepresentado =
+              "Nombre completo de la madre de representado es requerido.";
+          }
 
-      if (!data.nitMadreRepresentado) {
-        errors.nitMadreRepresentado =
-          "NIT de la madre del representado es requerido.";
-      }
+          if (!data.duiMadreRepresentado) {
+            errors.duiMadreRepresentado =
+              "DUI de la madre del representado es requerido.";
+          }
 
-      //PADRE
-      if (!data.nombreCompletoPadreRepresentado) {
-        errors.nombreCompletoPadreRepresentado =
-          "Nombre completo del padre de representado es requerido.";
-      }
+          if (!data.fechaExpiracionpDUIMadreRepresentado) {
+            errors.fechaExpiracionpDUIMadreRepresentado =
+              "Fecha expiración DUI de la madre del representado es requerido.";
+          }
 
-      if (!data.duiPadreRepresentado) {
-        errors.duiPadreRepresentado =
-          "DUI del padre del representado es requerido.";
-      }
+          if (!data.nitMadreRepresentado) {
+            errors.nitMadreRepresentado =
+              "NIT de la madre del representado es requerido.";
+          }
 
-      if (!data.fechaExpiracionpDUIPadreRepresentado) {
-        errors.fechaExpiracionpDUIPadreRepresentado =
-          "Fecha expiración DUI del padre del representado es requerido.";
-      }
+          //PADRE
+          if (!data.nombresPadreRepresentado) {
+            errors.nombresPadreRepresentado =
+              "Nombre completo de la madre de representado es requerido.";
+          }
 
-      if (!data.nitMadreRepresentado) {
-        errors.nitMadreRepresentado =
-          "NIT del padre del representado es requerido.";
+          if (!data.apellidosPadreRepresentado) {
+            errors.apellidosPadreRepresentado =
+              "Nombre completo de la madre de representado es requerido.";
+          }
+
+          if (!data.duiPadreRepresentado) {
+            errors.duiPadreRepresentado =
+              "DUI del padre del representado es requerido.";
+          }
+
+          if (!data.fechaExpiracionpDUIPadreRepresentado) {
+            errors.fechaExpiracionpDUIPadreRepresentado =
+              "Fecha expiración DUI del padre del representado es requerido.";
+          }
+
+          if (!data.nitPadreRepresentado) {
+            errors.nitPadreRepresentado =
+              "NIT del padre del representado es requerido.";
+          }
+        }
       }
       return errors;
     },
@@ -264,6 +294,7 @@ const ReclamoForm = () => {
         .post(baseURLReclamos + "solicitud", data)
         .then((res) => {
           if (res.status === 200) {
+            console.log(res);
             setShowDlgFound(true);
             localStorage.clear();
           } else {
@@ -292,7 +323,7 @@ const ReclamoForm = () => {
         <Button
           label="ACEPTAR"
           icon="pi pi-check"
-          onClick={() => onProcedureStart()}
+          onClick={() => onProcedureEnd()}
           autoFocus
         />
       </div>
@@ -305,7 +336,7 @@ const ReclamoForm = () => {
         <Button
           label="ACEPTAR"
           icon="pi pi-check"
-          onClick={() => onProcedureStart()}
+          onClick={() => onProcedureEnd()}
           autoFocus
         />
       </div>
@@ -370,6 +401,54 @@ const ReclamoForm = () => {
                 />
               </span>
               {getFormErrorMessage("nombreCompletoSolicitante")}
+            </div>
+            <div className="p-field">
+              <label
+                htmlFor="nombresSolicitante"
+                className={classNames({
+                  "p-error": isFormFieldValid("nombresSolicitante"),
+                })}
+              >
+                Nombres del solicitante:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-user" />
+                <InputText
+                  id="nombresSolicitante"
+                  name="nombresSolicitante"
+                  type="text"
+                  value={formik.values.nombresSolicitante}
+                  onChange={formik.handleChange}
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("nombresSolicitante"),
+                  })}
+                />
+              </span>
+              {getFormErrorMessage("nombresSolicitante")}
+            </div>
+            <div className="p-field">
+              <label
+                htmlFor="apellidosSolicitante"
+                className={classNames({
+                  "p-error": isFormFieldValid("apellidosSolicitante"),
+                })}
+              >
+                Apellidos del solicitante:
+              </label>
+              <span className="p-input-icon-right">
+                <i className="pi pi-user" />
+                <InputText
+                  id="apellidosSolicitante"
+                  name="apellidosSolicitante"
+                  type="text"
+                  value={formik.values.apellidosSolicitante}
+                  onChange={formik.handleChange}
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("apellidosSolicitante"),
+                  })}
+                />
+              </span>
+              {getFormErrorMessage("apellidosSolicitante")}
             </div>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <label
@@ -603,59 +682,111 @@ const ReclamoForm = () => {
                 </div>
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
-                    htmlFor="duiRepresentado"
+                    htmlFor="nombresRepresentado"
                     className={classNames({
-                      "p-error": isFormFieldValid("duiRepresentado"),
+                      "p-error": isFormFieldValid("nombresRepresentado"),
                     })}
                   >
-                    DUI del representado:
+                    Nombres del representado:
                   </label>
                   <span className="p-input-icon-right">
-                    <i className="pi pi-id-card" />
-                    <InputMask
-                      id="duiRepresentado"
-                      name="duiRepresentado"
-                      mask="999999999"
-                      value={formik.values.duiRepresentado}
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="nombresRepresentado"
+                      name="nombresRepresentado"
+                      type="text"
+                      value={formik.values.nombresRepresentado}
                       onChange={formik.handleChange}
-                      placeholder="999999999"
                       className={classNames({
-                        "p-invalid": isFormFieldValid("duiRepresentado"),
-                      })}
-                    ></InputMask>
-                  </span>
-                  {getFormErrorMessage("duiRepresentado")}
-                </div>
-                <div className="p-field" style={{ marginTop: "10px" }}>
-                  <label
-                    htmlFor="fechaExpiracionpDUIRepresentado"
-                    className={classNames({
-                      "p-error": isFormFieldValid(
-                        "fechaExpiracionpDUIRepresentado"
-                      ),
-                    })}
-                  >
-                    Fecha expiración DUI del representado:
-                  </label>
-                  <span className="p-input-icon-right">
-                    <i className="pi pi-credit-card" />
-                    <Calendar
-                      id="fechaExpiracionpDUIRepresentado"
-                      name="fechaExpiracionpDUIRepresentado"
-                      value={formik.values.fechaExpiracionpDUIRepresentado}
-                      onChange={formik.handleChange}
-                      dateFormat="dd/mm/yy"
-                      mask="99/99/9999"
-                      showIcon
-                      className={classNames({
-                        "p-invalid": isFormFieldValid(
-                          "fechaExpiracionpDUIRepresentado"
-                        ),
+                        "p-invalid": isFormFieldValid("nombresRepresentado"),
                       })}
                     />
                   </span>
-                  {getFormErrorMessage("fechaExpiracionpDUIRepresentado")}
+                  {getFormErrorMessage("nombresRepresentado")}
                 </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="apellidosRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("apellidosRepresentado"),
+                    })}
+                  >
+                    Apellidos del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="apellidosRepresentado"
+                      name="apellidosRepresentado"
+                      type="text"
+                      value={formik.values.apellidosRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid("apellidosRepresentado"),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("apellidosRepresentado")}
+                </div>
+                {!showInfoPadres && (
+                  <React.Fragment>
+                    <div className="p-field" style={{ marginTop: "10px" }}>
+                      <label
+                        htmlFor="duiRepresentado"
+                        className={classNames({
+                          "p-error": isFormFieldValid("duiRepresentado"),
+                        })}
+                      >
+                        DUI del representado:
+                      </label>
+                      <span className="p-input-icon-right">
+                        <i className="pi pi-id-card" />
+                        <InputMask
+                          id="duiRepresentado"
+                          name="duiRepresentado"
+                          mask="999999999"
+                          value={formik.values.duiRepresentado}
+                          onChange={formik.handleChange}
+                          placeholder="999999999"
+                          className={classNames({
+                            "p-invalid": isFormFieldValid("duiRepresentado"),
+                          })}
+                        ></InputMask>
+                      </span>
+                      {getFormErrorMessage("duiRepresentado")}
+                    </div>
+                    <div className="p-field" style={{ marginTop: "10px" }}>
+                      <label
+                        htmlFor="fechaExpiracionpDUIRepresentado"
+                        className={classNames({
+                          "p-error": isFormFieldValid(
+                            "fechaExpiracionpDUIRepresentado"
+                          ),
+                        })}
+                      >
+                        Fecha expiración DUI del representado:
+                      </label>
+                      <span className="p-input-icon-right">
+                        <i className="pi pi-credit-card" />
+                        <Calendar
+                          id="fechaExpiracionpDUIRepresentado"
+                          name="fechaExpiracionpDUIRepresentado"
+                          value={formik.values.fechaExpiracionpDUIRepresentado}
+                          onChange={formik.handleChange}
+                          dateFormat="dd/mm/yy"
+                          mask="99/99/9999"
+                          showIcon
+                          className={classNames({
+                            "p-invalid": isFormFieldValid(
+                              "fechaExpiracionpDUIRepresentado"
+                            ),
+                          })}
+                        />
+                      </span>
+                      {getFormErrorMessage("fechaExpiracionpDUIRepresentado")}
+                    </div>
+                  </React.Fragment>
+                )}
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
                     htmlFor="nitRepresentado"
@@ -815,6 +946,58 @@ const ReclamoForm = () => {
                 </div>
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
+                    htmlFor="nombresMadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("nombresMadreRepresentado"),
+                    })}
+                  >
+                    Nombres de la madre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="nombresMadreRepresentado"
+                      name="nombresMadreRepresentado"
+                      type="text"
+                      value={formik.values.nombresMadreRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "nombresMadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("nombresMadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="apellidosMadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("apellidosMadreRepresentado"),
+                    })}
+                  >
+                    Nombres de la madre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="apellidosMadreRepresentado"
+                      name="apellidosMadreRepresentado"
+                      type="text"
+                      value={formik.values.apellidosMadreRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "apellidosMadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("apellidosMadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
                     htmlFor="duiMadreRepresentado"
                     className={classNames({
                       "p-error": isFormFieldValid("duiMadreRepresentado"),
@@ -894,7 +1077,6 @@ const ReclamoForm = () => {
                   </span>
                   {getFormErrorMessage("nitMadreRepresentado")}
                 </div>
-
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
                     htmlFor="nombreCompletoPadreRepresentado"
@@ -922,6 +1104,58 @@ const ReclamoForm = () => {
                     />
                   </span>
                   {getFormErrorMessage("nombreCompletoPadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="nombresPadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("nombresPadreRepresentado"),
+                    })}
+                  >
+                    Nombres del padre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="nombreCompletoPadreRepresentado"
+                      name="nombreCompletoPadreRepresentado"
+                      type="text"
+                      value={formik.values.nombresPadreRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "nombreCompletoPadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("nombreCompletoPadreRepresentado")}
+                </div>
+                <div className="p-field" style={{ marginTop: "10px" }}>
+                  <label
+                    htmlFor="apellidosPadreRepresentado"
+                    className={classNames({
+                      "p-error": isFormFieldValid("apellidosPadreRepresentado"),
+                    })}
+                  >
+                    Apellidos del padre del representado:
+                  </label>
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText
+                      id="apellidosPadreRepresentado"
+                      name="apellidosPadreRepresentado"
+                      type="text"
+                      value={formik.values.apellidosPadreRepresentado}
+                      onChange={formik.handleChange}
+                      className={classNames({
+                        "p-invalid": isFormFieldValid(
+                          "apellidosPadreRepresentado"
+                        ),
+                      })}
+                    />
+                  </span>
+                  {getFormErrorMessage("apellidosPadreRepresentado")}
                 </div>
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
@@ -1029,9 +1263,10 @@ const ReclamoForm = () => {
         </div>
         <p style={{ textAlign: "justify" }}>
           La información proporcionada a sido guardada con éxito. A continuación
-          verá información importante del reclamo para que pueda realizar las
-          gestiones necesarias. Le recomendamos guardar estos datos para futuras
-          consultas.
+          verá información importante del trámite para que pueda realizar las
+          gestiones necesarias en las oficinas centrales o agencias
+          departamentales de La Caja. Le recomendamos guardar estos datos para
+          futuras consultas.
         </p>
         <p>
           Nombre del asegurado: <strong>{""}</strong>
