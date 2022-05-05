@@ -294,7 +294,6 @@ const ReclamoForm = () => {
         .post(baseURLReclamos + "solicitud", data)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
             setShowDlgFound(true);
             localStorage.clear();
           } else {
@@ -377,30 +376,6 @@ const ReclamoForm = () => {
                 />
               </span>
               {getFormErrorMessage("tipoSolicitante")}
-            </div>
-            <div className="p-field">
-              <label
-                htmlFor="nombreCompletoSolicitante"
-                className={classNames({
-                  "p-error": isFormFieldValid("nombreCompletoSolicitante"),
-                })}
-              >
-                Nombre completo del solicitante:
-              </label>
-              <span className="p-input-icon-right">
-                <i className="pi pi-user" />
-                <InputText
-                  id="nombreCompletoSolicitante"
-                  name="nombreCompletoSolicitante"
-                  type="text"
-                  value={formik.values.nombreCompletoSolicitante}
-                  onChange={formik.handleChange}
-                  className={classNames({
-                    "p-invalid": isFormFieldValid("nombreCompletoSolicitante"),
-                  })}
-                />
-              </span>
-              {getFormErrorMessage("nombreCompletoSolicitante")}
             </div>
             <div className="p-field">
               <label
@@ -514,18 +489,17 @@ const ReclamoForm = () => {
               </label>
               <span className="p-input-icon-right">
                 <i className="pi pi-credit-card" />
-                <InputMask
+                <InputText
                   id="nitSolicitante"
                   name="nitSolicitante"
                   value={formik.values.nitSolicitante}
                   onChange={formik.handleChange}
-                  mask="9999-999999-999-9"
-                  placeholder="9999-999999-999-9"
+                  placeholder="99999999999999"
                   className={classNames({
                     "p-invalid": isFormFieldValid("nitSolicitante"),
                   })}
                   keyfilter="pint"
-                ></InputMask>
+                ></InputText>
               </span>
               {getFormErrorMessage("nitSolicitante")}
             </div>
@@ -656,32 +630,6 @@ const ReclamoForm = () => {
               <React.Fragment>
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
-                    htmlFor="nombreCompletoRepresentado"
-                    className={classNames({
-                      "p-error": isFormFieldValid("nombreCompletoRepresentado"),
-                    })}
-                  >
-                    Nombre completo del representado:
-                  </label>
-                  <span className="p-input-icon-right">
-                    <i className="pi pi-user" />
-                    <InputText
-                      id="nombreCompletoRepresentado"
-                      name="nombreCompletoRepresentado"
-                      type="text"
-                      value={formik.values.nombreCompletoRepresentado}
-                      onChange={formik.handleChange}
-                      className={classNames({
-                        "p-invalid": isFormFieldValid(
-                          "nombreCompletoRepresentado"
-                        ),
-                      })}
-                    />
-                  </span>
-                  {getFormErrorMessage("nombreCompletoRepresentado")}
-                </div>
-                <div className="p-field" style={{ marginTop: "10px" }}>
-                  <label
                     htmlFor="nombresRepresentado"
                     className={classNames({
                       "p-error": isFormFieldValid("nombresRepresentado"),
@@ -798,18 +746,17 @@ const ReclamoForm = () => {
                   </label>
                   <span className="p-input-icon-right">
                     <i className="pi pi-credit-card" />
-                    <InputMask
+                    <InputText
                       id="nitRepresentado"
                       name="nitRepresentado"
                       value={formik.values.nitRepresentado}
                       onChange={formik.handleChange}
-                      mask="9999-999999-999-9"
-                      placeholder="9999-999999-999-9"
+                      placeholder="99999999999999"
                       className={classNames({
                         "p-invalid": isFormFieldValid("nitRepresentado"),
                       })}
                       keyfilter="pint"
-                    ></InputMask>
+                    ></InputText>
                   </span>
                   {getFormErrorMessage("nitRepresentado")}
                 </div>
@@ -916,34 +863,6 @@ const ReclamoForm = () => {
             )}
             {showInfoPadres && (
               <React.Fragment>
-                <div className="p-field" style={{ marginTop: "10px" }}>
-                  <label
-                    htmlFor="nombreCompletoMadreRepresentado"
-                    className={classNames({
-                      "p-error": isFormFieldValid(
-                        "nombreCompletoMadreRepresentado"
-                      ),
-                    })}
-                  >
-                    Nombre completo de la madre del representado:
-                  </label>
-                  <span className="p-input-icon-right">
-                    <i className="pi pi-user" />
-                    <InputText
-                      id="nombreCompletoMadreRepresentado"
-                      name="nombreCompletoMadreRepresentado"
-                      type="text"
-                      value={formik.values.nombreCompletoMadreRepresentado}
-                      onChange={formik.handleChange}
-                      className={classNames({
-                        "p-invalid": isFormFieldValid(
-                          "nombreCompletoMadreRepresentado"
-                        ),
-                      })}
-                    />
-                  </span>
-                  {getFormErrorMessage("nombreCompletoMadreRepresentado")}
-                </div>
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
                     htmlFor="nombresMadreRepresentado"
@@ -1062,48 +981,19 @@ const ReclamoForm = () => {
                   </label>
                   <span className="p-input-icon-right">
                     <i className="pi pi-credit-card" />
-                    <InputMask
+                    <InputText
                       id="nitMadreRepresentado"
                       name="nitMadreRepresentado"
                       value={formik.values.nitMadreRepresentado}
                       onChange={formik.handleChange}
-                      mask="9999-999999-999-9"
-                      placeholder="9999-999999-999-9"
+                      placeholder="99999999999999"
                       className={classNames({
                         "p-invalid": isFormFieldValid("nitMadreRepresentado"),
                       })}
                       keyfilter="pint"
-                    ></InputMask>
+                    ></InputText>
                   </span>
                   {getFormErrorMessage("nitMadreRepresentado")}
-                </div>
-                <div className="p-field" style={{ marginTop: "10px" }}>
-                  <label
-                    htmlFor="nombreCompletoPadreRepresentado"
-                    className={classNames({
-                      "p-error": isFormFieldValid(
-                        "nombreCompletoPadreRepresentado"
-                      ),
-                    })}
-                  >
-                    Nombre completo del padre del representado:
-                  </label>
-                  <span className="p-input-icon-right">
-                    <i className="pi pi-user" />
-                    <InputText
-                      id="nombreCompletoPadreRepresentado"
-                      name="nombreCompletoPadreRepresentado"
-                      type="text"
-                      value={formik.values.nombreCompletoPadreRepresentado}
-                      onChange={formik.handleChange}
-                      className={classNames({
-                        "p-invalid": isFormFieldValid(
-                          "nombreCompletoPadreRepresentado"
-                        ),
-                      })}
-                    />
-                  </span>
-                  {getFormErrorMessage("nombreCompletoPadreRepresentado")}
                 </div>
                 <div className="p-field" style={{ marginTop: "10px" }}>
                   <label
@@ -1117,14 +1007,14 @@ const ReclamoForm = () => {
                   <span className="p-input-icon-right">
                     <i className="pi pi-user" />
                     <InputText
-                      id="nombreCompletoPadreRepresentado"
-                      name="nombreCompletoPadreRepresentado"
+                      id="nombresPadreRepresentado"
+                      name="nombresPadreRepresentado"
                       type="text"
                       value={formik.values.nombresPadreRepresentado}
                       onChange={formik.handleChange}
                       className={classNames({
                         "p-invalid": isFormFieldValid(
-                          "nombreCompletoPadreRepresentado"
+                          "nombresPadreRepresentado"
                         ),
                       })}
                     />
@@ -1223,18 +1113,17 @@ const ReclamoForm = () => {
                   </label>
                   <span className="p-input-icon-right">
                     <i className="pi pi-credit-card" />
-                    <InputMask
+                    <InputText
                       id="nitPadreRepresentado"
                       name="nitPadreRepresentado"
                       value={formik.values.nitPadreRepresentado}
                       onChange={formik.handleChange}
-                      mask="9999-999999-999-9"
-                      placeholder="9999-999999-999-9"
+                      placeholder="99999999999999"
                       className={classNames({
                         "p-invalid": isFormFieldValid("nitPadreRepresentado"),
                       })}
                       keyfilter="pint"
-                    ></InputMask>
+                    ></InputText>
                   </span>
                   {getFormErrorMessage("nitPadreRepresentado")}
                 </div>
@@ -1262,20 +1151,10 @@ const ReclamoForm = () => {
           ></i>
         </div>
         <p style={{ textAlign: "justify" }}>
-          La información proporcionada a sido guardada con éxito. A continuación
-          verá información importante del trámite para que pueda realizar las
-          gestiones necesarias en las oficinas centrales o agencias
-          departamentales de La Caja. Le recomendamos guardar estos datos para
-          futuras consultas.
-        </p>
-        <p>
-          Nombre del asegurado: <strong>{""}</strong>
-        </p>
-        <p>
-          Número de solicitud: <strong>{""}</strong>
-        </p>
-        <p>
-          Nombre del solicitante: <strong>{""}</strong>
+          La información proporcionada a sido guardada con éxito. Para poder
+          completar su trámite, puede visitarnos en las oficinas centrales o
+          agencias departamentales de La Caja con el DUI de la persona que
+          registrado el trámite web.
         </p>
       </Dialog>
       <Dialog
