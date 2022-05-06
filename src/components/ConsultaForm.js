@@ -132,6 +132,7 @@ const ConsultaForm = () => {
                   className={classNames({
                     "p-invalid": isFormFieldValid("noSolicitud"),
                   })}
+                  keyfilter="pint"
                 />
               </span>
               {getFormErrorMessage("noSolicitud")}
@@ -179,6 +180,7 @@ const ConsultaForm = () => {
                   onChange={formik.handleChange}
                   dateFormat="dd/mm/yy"
                   mask="99/99/9999"
+                  minDate={new Date()}
                   showIcon
                   className={classNames({
                     "p-invalid": isFormFieldValid("fechaExpiracionDUI"),

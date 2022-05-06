@@ -9,6 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
+import { Panel } from "primereact/panel";
 import { classNames } from "primereact/utils";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -68,6 +69,10 @@ const ReclamoForm = () => {
     );
     setShowInfoPadres(selectedTipoSolicitante === "06");
     formik.handleChange(e);
+  };
+
+  const onFileChange = (e) => {
+    console.log(e.target.files[0]);
   };
 
   useEffect(() => {
@@ -468,6 +473,7 @@ const ReclamoForm = () => {
                   onChange={formik.handleChange}
                   dateFormat="dd/mm/yy"
                   mask="99/99/9999"
+                  minDate={new Date()}
                   showIcon
                   className={classNames({
                     "p-invalid": isFormFieldValid(
@@ -723,6 +729,7 @@ const ReclamoForm = () => {
                           onChange={formik.handleChange}
                           dateFormat="dd/mm/yy"
                           mask="99/99/9999"
+                          minDate={new Date()}
                           showIcon
                           className={classNames({
                             "p-invalid": isFormFieldValid(
@@ -960,6 +967,7 @@ const ReclamoForm = () => {
                       onChange={formik.handleChange}
                       dateFormat="dd/mm/yy"
                       mask="99/99/9999"
+                      minDate={new Date()}
                       showIcon
                       className={classNames({
                         "p-invalid": isFormFieldValid(
@@ -1092,6 +1100,7 @@ const ReclamoForm = () => {
                       onChange={formik.handleChange}
                       dateFormat="dd/mm/yy"
                       mask="99/99/9999"
+                      minDate={new Date()}
                       showIcon
                       className={classNames({
                         "p-invalid": isFormFieldValid(
@@ -1129,6 +1138,69 @@ const ReclamoForm = () => {
                 </div>
               </React.Fragment>
             )}
+            <Panel
+              header="Documentos del asegurado"
+              style={{ marginTop: "10px" }}
+            >
+              <div className="p-field" style={{ marginTop: "10px" }}>
+                <label htmlFor="partidaDefuncionEscaneo">
+                  Escaneo partida de defunción:
+                </label>
+                <input
+                  id="partidaDefuncionEscaneo"
+                  type="file"
+                  name="file_partida_defuncion"
+                  onChange={onFileChange}
+                />
+              </div>
+              <div className="p-field" style={{ marginTop: "10px" }}>
+                <label htmlFor="partidaNacimientoEscaneo">
+                  Escaneo partida de nacimiento:
+                </label>
+                <input
+                  id="partidaNacimientoEscaneo"
+                  type="file"
+                  name="file_upload"
+                  onChange={onFileChange}
+                />
+              </div>
+              <div className="p-field" style={{ marginTop: "10px" }}>
+                <label htmlFor="duiEscaneo">Escaneo DUI:</label>
+                <input
+                  id="duiEscaneo"
+                  type="file"
+                  name="file_upload"
+                  onChange={onFileChange}
+                />
+              </div>
+            </Panel>
+            <Panel
+              header="Documentos del beneficiario"
+              style={{ marginTop: "10px" }}
+            >
+              <div className="p-field" style={{ marginTop: "10px" }}>
+                <label htmlFor="partidaDeNacimientoBeneficiarioEscaneo">
+                  Escaneo partida de nacimiento:
+                </label>
+                <input
+                  id="partidaDeNacimientoBeneficiarioEscaneo"
+                  type="file"
+                  name="file_partida_nacimiento_beneficiario"
+                  onChange={onFileChange}
+                />
+              </div>
+              <div className="p-field" style={{ marginTop: "10px" }}>
+                <label htmlFor="duiRTAEscaneo">
+                  Escaneo DUI representante legal, tutor o apoderado legal:
+                </label>
+                <input
+                  id="duiRTAEscaneo"
+                  type="file"
+                  name="file_upload"
+                  onChange={onFileChange}
+                />
+              </div>
+            </Panel>
             <div className="p-field" style={{ marginTop: "10px" }}>
               <Button label="Enviar" icon="pi pi-check" type="submit" />
             </div>
