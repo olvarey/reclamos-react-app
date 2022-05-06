@@ -45,7 +45,7 @@ const ConsultaForm = () => {
     onSubmit: (data) => {
       setFormData(data);
       axios
-        .get("http://localhost:8181/api-asegurados/v1/solicitud", {
+        .get("http://192.168.10.82:8181/api-asegurados/v1/solicitud", {
           params: {
             noSolicitud: data.noSolicitud,
             duiSolicitante: data.duiSolicitante,
@@ -225,15 +225,15 @@ const ConsultaForm = () => {
                   header="Número solicitud"
                 ></Column>
                 <Column
-                  field="idSolicitudReclamoPK.tipoSeguro"
+                  field="tipoSeguro.nombreSeguro"
                   header="Tipo seguro"
                 ></Column>
                 <Column
-                  field="calidadSolicitante"
+                  field="tipoSolicitante.descripcion"
                   header="Tipo solicitante"
                 ></Column>
                 <Column
-                  field="estadoSolicitud"
+                  field="estadoSolicitud.descripcion"
                   header="Estado solicitud"
                 ></Column>
               </DataTable>

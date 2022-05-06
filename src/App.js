@@ -9,7 +9,7 @@ import ConsultaForm from "./components/ConsultaForm";
 import ReclamoForm from "./components/ReclamoForm";
 
 //React Router
-import { MemoryRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //PrimeReact
 import "primereact/resources/themes/lara-light-indigo/theme.css";

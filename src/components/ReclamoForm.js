@@ -27,8 +27,8 @@ const ReclamoForm = () => {
   const [showInfoRepresentado, setShowInfoRepresentado] = useState(false);
   const [showInfoPadres, setShowInfoPadres] = useState(false);
 
-  const baseURLAsegurado = "http://localhost:8181/api-asegurados/v1/";
-  const baseURLReclamos = "http://localhost:8080/api-reclamos/v1/";
+  const baseURLAsegurado = "http://192.168.10.82:8181/api-asegurados/v1/";
+  const baseURLReclamos = "http://192.168.10.82:8080/api-reclamos/v1/";
 
   const fetchTiposSolicitante = () => {
     axios
