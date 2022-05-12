@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { InputText } from "primereact/inputtext";
@@ -10,6 +10,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
 import { Panel } from "primereact/panel";
+import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -29,6 +30,8 @@ const ReclamoForm = () => {
 
   const baseURLAsegurado = "http://192.168.10.82:8181/api-asegurados/v1/";
   const baseURLReclamos = "http://192.168.10.82:8080/api-reclamos/v1/";
+
+  const toast = useRef(null);
 
   const fetchTiposSolicitante = () => {
     axios
@@ -73,6 +76,10 @@ const ReclamoForm = () => {
 
   const onFileChange = (e) => {
     console.log(e.target.files[0]);
+  };
+
+  const clear = () => {
+    toast.current.clear();
   };
 
   useEffect(() => {
@@ -124,7 +131,6 @@ const ReclamoForm = () => {
     },
     validate: (data) => {
       let errors = {};
-
       //SOLICITANTE
       if (!data.nombresSolicitante) {
         errors.nombresSolicitante = "Nombres del solicitante es requerido.";
@@ -284,6 +290,15 @@ const ReclamoForm = () => {
           }
         }
       }
+      if (errors) {
+        clear();
+        toast.current.show({
+          severity: "success",
+          summary: "Success Message",
+          detail: "Message Content",
+          life: 3000,
+        });
+      }
       return errors;
     },
     onSubmit: (data) => {
@@ -349,6 +364,7 @@ const ReclamoForm = () => {
 
   return (
     <React.Fragment>
+      <Toast ref={toast} />
       <Card
         title="Información del reclamo"
         style={{ width: "30rem", marginBottom: "2em", marginTop: "10px" }}
