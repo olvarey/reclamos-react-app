@@ -28,8 +28,8 @@ const ReclamoForm = () => {
   const [showInfoRepresentado, setShowInfoRepresentado] = useState(false);
   const [showInfoPadres, setShowInfoPadres] = useState(false);
 
-  const baseURLAsegurado = "http://192.168.10.82:8181/api-asegurados/v1/";
-  const baseURLReclamos = "http://192.168.10.82:8080/api-reclamos/v1/";
+  const baseURLAsegurado = "http://localhost:8181/api-asegurados/v1/";
+  const baseURLReclamos = "http://localhost:8080/api-reclamos/v1/";
 
   const toast = useRef(null);
 
@@ -290,15 +290,15 @@ const ReclamoForm = () => {
           }
         }
       }
-      if (errors) {
-        clear();
-        toast.current.show({
-          severity: "success",
-          summary: "Success Message",
-          detail: "Message Content",
-          life: 3000,
-        });
-      }
+      // if (errors) {
+      //   clear();
+      //   toast.current.show({
+      //     severity: "success",
+      //     summary: "Success Message",
+      //     detail: "Message Content",
+      //     life: 3000,
+      //   });
+      // }
       return errors;
     },
     onSubmit: (data) => {
@@ -314,6 +314,7 @@ const ReclamoForm = () => {
         .post(baseURLReclamos + "solicitud", data)
         .then((res) => {
           if (res.status === 200) {
+            //TODO - Enviar los 5 documentos adjuntos aquí
             setShowDlgFound(true);
             localStorage.clear();
           } else {
@@ -1165,7 +1166,7 @@ const ReclamoForm = () => {
                 <input
                   id="partidaDefuncionEscaneo"
                   type="file"
-                  name="file_partida_defuncion"
+                  name="partida-defuncion-asegurado"
                   onChange={onFileChange}
                 />
               </div>
@@ -1176,7 +1177,7 @@ const ReclamoForm = () => {
                 <input
                   id="partidaNacimientoEscaneo"
                   type="file"
-                  name="file_upload"
+                  name="partida-nacimiento-asegurado"
                   onChange={onFileChange}
                 />
               </div>
@@ -1185,7 +1186,7 @@ const ReclamoForm = () => {
                 <input
                   id="duiEscaneo"
                   type="file"
-                  name="file_upload"
+                  name="dui-asegurado"
                   onChange={onFileChange}
                 />
               </div>
@@ -1201,7 +1202,7 @@ const ReclamoForm = () => {
                 <input
                   id="partidaDeNacimientoBeneficiarioEscaneo"
                   type="file"
-                  name="file_partida_nacimiento_beneficiario"
+                  name="partida-nacimiento-beneficiario"
                   onChange={onFileChange}
                 />
               </div>
@@ -1212,7 +1213,7 @@ const ReclamoForm = () => {
                 <input
                   id="duiRTAEscaneo"
                   type="file"
-                  name="file_upload"
+                  name="dui-representante"
                   onChange={onFileChange}
                 />
               </div>

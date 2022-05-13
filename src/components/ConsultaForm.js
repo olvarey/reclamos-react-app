@@ -45,7 +45,7 @@ const ConsultaForm = () => {
     onSubmit: (data) => {
       setFormData(data);
       axios
-        .get("http://192.168.10.82:8181/api-asegurados/v1/solicitud", {
+        .get("http://localhost:8181/api-asegurados/v1/solicitud", {
           params: {
             noSolicitud: data.noSolicitud,
             duiSolicitante: data.duiSolicitante,

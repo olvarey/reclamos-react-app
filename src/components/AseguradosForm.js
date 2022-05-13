@@ -48,7 +48,7 @@ const AseguradosForm = () => {
     onSubmit: (data) => {
       setFormData(data);
       axios
-        .get("http://192.168.10.82:8181/api-asegurados/v1/maestro", {
+        .get("http://localhost:8181/api-asegurados/v1/maestro", {
           params: {
             nombre: data.nombreCompleto.trim().toUpperCase(),
             dui: data.dui,
